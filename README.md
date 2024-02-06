@@ -11,4 +11,6 @@
 `source env/bin/activate` - make sure that you **always** work in the virtual environment.  
 
 ## Run a virtual server
-`django-admin manage.py runserver` - 8080 port default  
+`python web/manage.py runserver` - 8080 port default  
+
+**Access it at** `localhost:8080` 
