@@ -10,7 +10,7 @@ ENV PYTHONUNBUFFERED 1
 WORKDIR /code
 
 # Install dependencies
-COPY ./requirements.txt .
+COPY ./docker/requirements.txt .
 RUN pip install -r requirements.txt
 
 # Copy project
