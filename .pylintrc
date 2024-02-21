@@ -1,1 +1,2 @@
-ignore = obsolete
+[MASTER]
+ignore-patterns=obsolete/*
