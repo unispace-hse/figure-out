@@ -1,2 +1,5 @@
 [MASTER]
 ignore-patterns=obsolete/*
+
+[MESSAGES CONTROL]
+disable = duplicate-code
