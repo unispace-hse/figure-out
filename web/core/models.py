@@ -31,3 +31,21 @@ class Habit(models.Model):
     goal = models.IntegerField(default=0)
     is_done = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+
+class DailyRecord(models.Model):
+    habit = models.ForeignKey(Habit, on_delete=models.CASCADE, related_name='habit_dailyrecords')
+    date_completed = models.DateField(db_index=True, auto_now_add=True)
+
+
+class SpaceLearningTask(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="habits")
+    title = models.CharField(max_length=128)
+    subject = models.CharField(max_length=128)
+    description = models.TextField(null=True, blank=True)
+
+
+class SpaceLearningFile(models.Model):
+    task = models.ForeignKey(SpaceLearningTask, on_delete=models.CASCADE, related_name='files')
+    created_at = models.DateTimeField(auto_now_add=True)
