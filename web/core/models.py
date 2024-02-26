@@ -33,17 +33,23 @@ class Habit(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
 
-
-class DailyRecord(models.Model):
+class HabitDailyRecord(models.Model):
     habit = models.ForeignKey(Habit, on_delete=models.CASCADE, related_name='habit_dailyrecords')
     date_completed = models.DateField(db_index=True, auto_now_add=True)
 
 
 class SpaceLearningTask(models.Model):
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="habits")
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="spacelearningtasks")
     title = models.CharField(max_length=128)
     subject = models.CharField(max_length=128)
+    is_done = models.BooleanField(default=False)
     description = models.TextField(null=True, blank=True)
+
+
+class SpaceLearningDailyRecord(models.Model):
+    task = models.ForeignKey(SpaceLearningTask, on_delete=models.CASCADE, related_name="spacelearningtask_dailyrecords")
+    notification_date = models.DateTimeField(db_index=True)
+    is_checked = models.BooleanField(default=False)
 
 
 class SpaceLearningFile(models.Model):
