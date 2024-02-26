@@ -1,142 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
-    {% load static %}
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Sign in</title>
-        <link rel="stylesheet" href="{% static 'core/login.css' %}">
-    </head>
-    <body>
-        <div>
-            <div class="c_login-frame">
-              <div class="c_login-frame01">
-                <div class="c_login-text"><p class="c_login-text01">Welcome!</p></div>
-                <div class="c_login-frame02">
-                  <div class="c_login-frame03">
-                    <div class="c_login-instance">
-                      <div class="c_login-frame04">
-                        <div class="c_login-frame05">
-                          <div class="c_login-frame06">
-                            <div class="c_login-text02">
-                              <p class="c_login-text03">Email Address</p>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="c_login-instance01">
-                      <div class="c_login-frame07">
-                        <div class="c_login-frame08">
-                          <div class="c_login-frame09">
-                            <div class="c_login-text04">
-                              <p class="c_login-text05">Password</p>
-                            </div>
-                          </div>
-                        </div>
-                        <img
-                          src="{% static 'core/assets/e2200f0ded3c25beddd0b3d82bb27212.svg' %}"
-                          alt="instance"
-                          width="16"
-                          height="16"
-                          class="c_login-instance02"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div class="c_login-frame10">
-                    <div class="c_login-text06">
-                      <p class="c_login-text07">Forgot password?</p>
-                    </div>
-                    <div class="c_login-instance03">
-                      <div class="c_login-text08">
-                        <p class="c_login-text09">Login</p>
-                      </div>
-                    </div>
-                    <div class="c_login-text10">
-                      <p class="c_login-text11">
-                        <span class="c_login-text12">Not a member?</span>
-                        <span class="c_login-text13">Sign up now</span>
-                      </p>
-                    </div>
-                  </div>
-                  <img
-                    src="{% static 'core/assets/b016660f03ff037c06586e0ef3ed8867.svg' %}"
-                    alt="instance"
-                    width="327.5"
-                    height="0.5"
-                    class="c_login-instance04"
-                  />
-                </div>
-                <div class="c_login-frame11">
-                  <div class="c_login-text14">
-                    <p class="c_login-text15">Or continue with</p>
-                  </div>
-                  <div class="c_login-frame12">
-                    <div class="c_login-instance05">
-                      <img
-                        src="{% static 'core/assets/b09e79a0718e1817fff8f87bd204d446.svg' %}"
-                        alt="instance"
-                        width="12"
-                        height="12"
-                        class="c_login-instance06"
-                      />
-                    </div>
-                    <div class="c_login-instance07">
-                      <img
-                        src="{% static 'core/assets/68402c5734fde1de59b8e7b4f14e5568.svg' %}"
-                        alt="instance"
-                        width="12"
-                        height="12"
-                        class="c_login-instance08"
-                      />
-                    </div>
-                    <div class="c_login-instance09">
-                      <img
-                        src="{% static 'core/assets/9397c9c881e2c4a50e676580575d7bdf.svg' %}"
-                        alt="instance"
-                        width="12"
-                        height="12"
-                        class="c_login-instance10"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="c_login-instance11">
-                <img
-                  src="{% static 'core/assets/0b4d6cd682fc46f9b4241f9a1f20d529.svg' %}"
-                  alt="instance"
-                  width="32"
-                  height="31.99951171875"
-                  class="c_login-instance12"
-                />
-              </div>
-              <div class="c_login-instance13">
-                <div class="c_login-frame13">
-                  <div class="c_login-text16"><p class="c_login-text17">9:41</p></div>
-                </div>
-                <div class="c_login-frame14">
-                  <div class="c_login-text18"><p class="c_login-text19">􀛨</p></div>
-                  <img
-                    src="{% static 'core/assets/868d3fbada5365cbb389ad83032ab003.svg' %}"
-                    alt="booleanope"
-                    width="17.0999755859375"
-                    height="10.70001220703125"
-                    class="c_login-booleanope"
-                  />
-                  <div class="c_login-text20"><p class="c_login-text21">􀙇</p></div>
-                </div>
-              </div>
-              <img
-                src="{% static 'core/assets/1c54faa0545b7e89265f4ffc82a1c710.svg' %}"
-                alt="instance"
-                width="373"
-                height="34"
-                class="c_login-instance14"
-              />
-            </div>
-          </div>
-          
-    </body>
-</html>
+{% extends 'base.html' %}
+{% block title %}Login{% endblock %}
+{% block header1 %}Login{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <form method='post'>
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-success">Save person</button>
+
+        <hr class="mt-0 mb-4">
+        <label>Don't you have an account?</label>
+        <a href="{% url 'signup' %}">Register here</a>
+    </form>
+{% endblock %}
