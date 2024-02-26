@@ -1,21 +1,33 @@
+"""
+Django models
+"""
+
 from django.db import models
 from django.contrib.auth import get_user_model
 
 
 class ToDoTag(models.Model):
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="todotags")
+    """Model representing a tag for ToDoTask."""
+
+    user = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE, related_name="todotags"
+    )
     title = models.CharField(max_length=32)
     emoji = models.CharField(max_length=1)
 
 
 class ToDoTask(models.Model):
+    """Model representing a ToDoTask."""
+
     PRIORITY_LEVEL = {
         0: "No Priority",
         1: "Low Priority",
         2: "Medium Priority",
-        3: "High Priority"
+        3: "High Priority",
     }
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="todotasks")
+    user = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE, related_name="todotasks"
+    )
     title = models.CharField(max_length=128)
     description = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -25,7 +37,11 @@ class ToDoTask(models.Model):
 
 
 class Habit(models.Model):
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="habits")
+    """Model representing a habit."""
+
+    user = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE, related_name="habits"
+    )
     title = models.CharField(max_length=128)
     description = models.TextField(null=True, blank=True)
     goal = models.IntegerField(default=0)
@@ -34,12 +50,20 @@ class Habit(models.Model):
 
 
 class HabitDailyRecord(models.Model):
-    habit = models.ForeignKey(Habit, on_delete=models.CASCADE, related_name='habit_dailyrecords')
+    """Model representing daily records of completed habits."""
+
+    habit = models.ForeignKey(
+        Habit, on_delete=models.CASCADE, related_name="habit_dailyrecords"
+    )
     date_completed = models.DateField(db_index=True, auto_now_add=True)
 
 
 class SpaceLearningTask(models.Model):
-    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name="spacelearningtasks")
+    """Model representing a task for space learning."""
+
+    user = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE, related_name="spacelearningtasks"
+    )
     title = models.CharField(max_length=128)
     subject = models.CharField(max_length=128)
     is_done = models.BooleanField(default=False)
@@ -47,11 +71,21 @@ class SpaceLearningTask(models.Model):
 
 
 class SpaceLearningDailyRecord(models.Model):
-    task = models.ForeignKey(SpaceLearningTask, on_delete=models.CASCADE, related_name="spacelearningtask_dailyrecords")
+    """Model representing daily records of space learning tasks."""
+
+    task = models.ForeignKey(
+        SpaceLearningTask,
+        on_delete=models.CASCADE,
+        related_name="spacelearningtask_dailyrecords",
+    )
     notification_date = models.DateTimeField(db_index=True)
     is_checked = models.BooleanField(default=False)
 
 
 class SpaceLearningFile(models.Model):
-    task = models.ForeignKey(SpaceLearningTask, on_delete=models.CASCADE, related_name='files')
+    """Model representing files related to space learning tasks."""
+
+    task = models.ForeignKey(
+        SpaceLearningTask, on_delete=models.CASCADE, related_name="files"
+    )
     created_at = models.DateTimeField(auto_now_add=True)

@@ -2,4 +2,4 @@
 ignore-patterns=obsolete/*
 
 [MESSAGES CONTROL]
-disable = duplicate-code
+disable = duplicate-code,no-member
