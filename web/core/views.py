@@ -2,11 +2,14 @@
 Core views
 """
 
-from django.http import HttpResponse
 from django.shortcuts import render, redirect
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from . import forms
+
+
+def index(request):
+    return render(request, "core/home.html")
 
 
 def user_login(request):
@@ -14,16 +17,12 @@ def user_login(request):
     Handle user authentication and login.
     """
     if request.method == "POST":
-        form = AuthenticationForm(request.POST)
+        form = AuthenticationForm(request, data=request.POST)
         if form.is_valid():
-            cd = form.cleaned_data
-            user = authenticate(username=cd["username"], password=cd["password"])
-            if user is not None:
-                if user.is_active:
-                    login(request, user)
-                    return HttpResponse("Authenticated successfully")
-                return HttpResponse("Disabled account")
-            return HttpResponse("Invalid login")
+            user = form.get_user()
+            login(request, user)
+            return redirect("root")
+        return render(request, "core/login.html", {"form": form})
     else:
         form = AuthenticationForm()
     return render(request, "core/login.html", {"form": form})
@@ -50,3 +49,8 @@ def user_signup(request):
         return render(request, "core/signup.html", {"form": form})
     form = forms.RegisterForm()
     return render(request, "core/signup.html", {"form": form})
+
+
+def user_logout(request):
+    logout(request)
+    return redirect("root")
