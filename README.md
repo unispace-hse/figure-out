@@ -57,4 +57,4 @@ For instance, [](localhost:8080/admin/) will request `admin.site.urls` and opens
 The basic Dockerfile that sets up an environment for the app frontend view testing (Django).
 > Will be upgraded.   
 3. 
-Hello world
+Hello world!
