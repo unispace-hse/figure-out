@@ -6,6 +6,23 @@ from django.db import models
 from django.contrib.auth import get_user_model
 
 
+class Account(models.Model):
+    """Model extends base user model"""
+
+    GENDER = [
+        ("M", "MALE"),
+        ("F", "FEMALE"),
+        ("O", "Other")
+    ]
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    birthday = models.DateField()
+    gender = models.CharField(
+        max_length=1,
+        choices=GENDER,
+        default="O"
+    )
+
+
 class ToDoTag(models.Model):
     """Model representing a tag for ToDoTask."""
 
