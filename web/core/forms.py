@@ -21,3 +21,19 @@ class RegisterForm(UserCreationForm):
         cd = self.cleaned_data
         account = models.Account(user=user, gender=cd.get("gender"), birthday=cd.get("birthday"))
         account.save()
+
+
+class ToDoTaskForm(forms.ModelForm):
+    def __init__(self, *args, user=None, **kwargs):
+        self.request = kwargs.pop("request")
+        super(ToDoTaskForm, self).__init__(*args, **kwargs)
+        self.fields["tags"].queryset = models.ToDoTag.objects.filter(user=self.request.user)
+
+    class Meta:
+        model = models.ToDoTask
+        fields = ("title", "description", "notification_datetime", "tags", "priority_level")
+
+    tags = forms.ModelChoiceField(
+        queryset=None,
+        widget=forms.CheckboxSelectMultiple
+    )

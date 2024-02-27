@@ -36,12 +36,12 @@ class ToDoTag(models.Model):
 class ToDoTask(models.Model):
     """Model representing a ToDoTask."""
 
-    PRIORITY_LEVEL = {
-        0: "No Priority",
-        1: "Low Priority",
-        2: "Medium Priority",
-        3: "High Priority",
-    }
+    PRIORITY_LEVEL = (
+        (0, "No Priority"),
+        (1, "Low Priority"),
+        (2, "Medium Priority"),
+        (3, "High Priority"),
+    )
     user = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, related_name="todotasks"
     )
@@ -51,6 +51,10 @@ class ToDoTask(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     notification_datetime = models.DateTimeField(null=True)
     tags = models.ManyToManyField(ToDoTag, related_name="tasks")
+    priority_level = models.IntegerField(
+        default=0,
+        choices=PRIORITY_LEVEL
+    )
 
 
 class Habit(models.Model):
