@@ -8,9 +8,9 @@ from django.contrib.auth import get_user_model
 from . import models
 
 
-class CustomModelMultipleChoiceField(forms.ModelMultipleChoiceField):
-    def label_from_instance(self, member):
-        return "%s" % member.title
+class TagMultipleChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, tag: models.ToDoTag):
+        return f"{tag.emoji}: {tag.title}"
 
 
 class RegisterForm(UserCreationForm):
@@ -38,7 +38,7 @@ class ToDoTaskForm(forms.ModelForm):
         model = models.ToDoTask
         fields = ("title", "description", "notification_datetime", "tags", "priority_level")
 
-    tags = CustomModelMultipleChoiceField(
+    tags = TagMultipleChoiceField(
         queryset=None,
         widget=forms.CheckboxSelectMultiple
     )

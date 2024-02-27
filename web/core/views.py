@@ -5,6 +5,7 @@ Core views
 from django.views.generic.edit import CreateView
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
 from django.urls import reverse_lazy
 from . import forms
@@ -58,7 +59,7 @@ def user_signup(request):
 #     form = forms.ToDoTaskForm()
 #     return render(request, "core/todocreate.html", context={"form": form})
 
-class AddToDoTask(CreateView):
+class AddToDoTask(LoginRequiredMixin, CreateView):
 
     model = models.ToDoTask
     form_class = forms.ToDoTaskForm
@@ -66,13 +67,15 @@ class AddToDoTask(CreateView):
     success_url = reverse_lazy("root")
 
     def get_form_kwargs(self):
-
         kwargs = super(AddToDoTask, self).get_form_kwargs()
         kwargs["request"] = self.request
         return kwargs
 
-
-
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        obj.save()
+        return redirect(self.success_url)
 
 
 def user_logout(request):
