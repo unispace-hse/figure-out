@@ -55,6 +55,7 @@ class ToDoTask(models.Model):
         default=0,
         choices=PRIORITY_LEVEL
     )
+    is_done = models.BooleanField(default=False)
 
 
 class Habit(models.Model):

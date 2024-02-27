@@ -2,11 +2,13 @@
 Core views
 """
 
+from django.views.generic import ListView
 from django.views.generic.edit import CreateView
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
+from django.http import HttpResponse
 from django.urls import reverse_lazy
 from . import forms
 from . import models
@@ -49,21 +51,23 @@ def user_signup(request):
             )
             login(request, user)
 
-            return redirect("login")
+            return redirect("root")
         return render(request, "core/signup.html", {"form": form})
     form = forms.RegisterForm()
     return render(request, "core/signup.html", {"form": form})
 
 
-# def todotask_create(request):
-#     form = forms.ToDoTaskForm()
-#     return render(request, "core/todocreate.html", context={"form": form})
+def user_logout(request):
+    logout(request)
+    return redirect("root")
+
 
 class AddToDoTask(LoginRequiredMixin, CreateView):
 
     model = models.ToDoTask
     form_class = forms.ToDoTaskForm
     template_name = "core/todocreate.html"
+
     success_url = reverse_lazy("root")
 
     def get_form_kwargs(self):
@@ -78,6 +82,17 @@ class AddToDoTask(LoginRequiredMixin, CreateView):
         return redirect(self.success_url)
 
 
-def user_logout(request):
-    logout(request)
-    return redirect("root")
+class ToDoListView(LoginRequiredMixin, ListView):
+    template_name = "core/todolist.html"
+    context_object_name = "todo_list"
+
+    def get_queryset(self):
+        return models.ToDoTask.objects.filter(user=self.request.user).order_by("-notification_datetime")
+
+
+def todo_update(request, todo_id):
+    todo = get_object_or_404(models.ToDoTask, pk=todo_id)
+    todo.is_done = False if todo.is_done else True
+    todo.save()
+
+    return redirect("todolist")
