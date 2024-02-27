@@ -8,6 +8,11 @@ from django.contrib.auth import get_user_model
 from . import models
 
 
+class CustomModelMultipleChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, member):
+        return "%s" % member.title
+
+
 class RegisterForm(UserCreationForm):
     gender = forms.ChoiceField(choices=models.Account.GENDER)
     birthday = forms.DateField(label="Birthday")
@@ -33,7 +38,7 @@ class ToDoTaskForm(forms.ModelForm):
         model = models.ToDoTask
         fields = ("title", "description", "notification_datetime", "tags", "priority_level")
 
-    tags = forms.ModelChoiceField(
+    tags = CustomModelMultipleChoiceField(
         queryset=None,
         widget=forms.CheckboxSelectMultiple
     )
