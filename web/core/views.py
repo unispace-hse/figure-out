@@ -8,8 +8,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
-from django.http import HttpResponse
+from django.http import Http404
 from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
 from . import forms
 from . import models
 
@@ -56,7 +57,7 @@ def user_signup(request):
     form = forms.RegisterForm()
     return render(request, "core/signup.html", {"form": form})
 
-
+@login_required
 def user_logout(request):
     logout(request)
     return redirect("root")
@@ -90,8 +91,11 @@ class ToDoListView(LoginRequiredMixin, ListView):
         return models.ToDoTask.objects.filter(user=self.request.user).order_by("-notification_datetime")
 
 
+@login_required
 def todo_update(request, todo_id):
     todo = get_object_or_404(models.ToDoTask, pk=todo_id)
+    if todo.user != request.user:
+        return Http404
     todo.is_done = False if todo.is_done else True
     todo.save()
 

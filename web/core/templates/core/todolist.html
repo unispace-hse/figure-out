@@ -2,10 +2,10 @@
 {% block title %}ToDo{% endblock %}
 
 {% block content %}
+    <h1>ToDo List</h1>
     <ul class="list-group">
         {% for todo in todo_list %}
             {% csrf_token %}
-            <ul class="list-group">
                 <li class="list-group-item list-group-item-action {% if todo.priority_level == 1 %}list-group-item-light{% elif todo.priority_level == 2 %}list-group-item-info{% elif todo.priority_level == 3 %}list-group-item-warning{% endif %}">
                     <div class="form-check">
                         <form method="post" action="{% url "todoupdate" todo.id %}">
@@ -21,7 +21,6 @@
                         </form>
                     </div>
                 </li>
-            </ul>
         {% endfor %}
     </ul>
 {% endblock %}
