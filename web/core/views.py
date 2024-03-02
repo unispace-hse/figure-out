@@ -59,20 +59,15 @@ def user_signup(request):
 #     return render(request, "core/todocreate.html", context={"form": form})
 
 class AddToDoTask(CreateView):
-
     model = models.ToDoTask
     form_class = forms.ToDoTaskForm
     template_name = "core/todocreate.html"
     success_url = reverse_lazy("root")
 
     def get_form_kwargs(self):
-
         kwargs = super(AddToDoTask, self).get_form_kwargs()
         kwargs["request"] = self.request
         return kwargs
-
-
-
 
 
 def user_logout(request):
