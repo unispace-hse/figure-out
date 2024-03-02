@@ -50,7 +50,7 @@ class ToDoTask(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     notification_datetime = models.DateTimeField(null=True)
-    tags = models.ManyToManyField(ToDoTag, related_name="tasks")
+    tags = models.ManyToManyField(ToDoTag, related_name="tasks", blank=True)
     priority_level = models.IntegerField(
         default=0,
         choices=PRIORITY_LEVEL

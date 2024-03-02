@@ -29,7 +29,7 @@ class RegisterForm(UserCreationForm):
 
 
 class ToDoTaskForm(forms.ModelForm):
-    def __init__(self, *args, user=None, **kwargs):
+    def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         super(ToDoTaskForm, self).__init__(*args, **kwargs)
         self.fields["tags"].queryset = models.ToDoTag.objects.filter(user=self.request.user)
@@ -40,5 +40,6 @@ class ToDoTaskForm(forms.ModelForm):
 
     tags = TagMultipleChoiceField(
         queryset=None,
-        widget=forms.CheckboxSelectMultiple
+        widget=forms.CheckboxSelectMultiple,
+        required=False
     )

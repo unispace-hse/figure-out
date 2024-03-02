@@ -3,7 +3,7 @@ Core views
 """
 
 from django.views.generic import ListView
-from django.views.generic.edit import CreateView
+from django.views.generic.edit import CreateView, UpdateView
 from django.views.generic.detail import DetailView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
@@ -123,14 +123,28 @@ class ToDoTaskDetailView(LoginRequiredMixin, DetailView):
             return models.ToDoTask.none()
 
 
-class ToDoTaskUpdateView(LoginRequiredMixin, CreateView):
-    model = models.ToDoTask
-    form_class = forms.ToDoTaskForm
-    template_name = "core/todocreate.html"
+# class ToDoTaskUpdateView(LoginRequiredMixin, UpdateView):
+#     model = models.ToDoTask
+#     template_name = "core/todocreate.html"
+#     form_class = forms.ToDoTaskForm
+#     # fields = ["title"]
+#     success_url = reverse_lazy("todolist")
+#
+#     def get_form_kwargs(self):
+#         kwargs = super(ToDoTaskUpdateView, self).get_form_kwargs()
+#         kwargs["request"] = self.request
+#         return kwargs
 
-    success_url = reverse_lazy("todolist")
 
-    def get_form_kwargs(self):
-        kwargs = super(ToDoTaskUpdateView, self).get_form_kwargs()
-        kwargs["request"] = self.request
-        return kwargs
+@login_required
+def todo_task_update_view(request, pk):
+    obj = get_object_or_404(models.ToDoTask, id=pk)
+    if obj.user != request.user:
+        return Http404()
+    if request.method == "POST":
+        form = forms.ToDoTaskForm(request.POST, instance=obj, request=request)
+        if form.is_valid():
+            form.save()
+            return redirect("todolist")
+    form = forms.ToDoTaskForm(instance=obj, request=request)
+    return render(request, "core/todocreate.html", {"form": form})
