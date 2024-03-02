@@ -96,7 +96,7 @@ class ToDoListView(LoginRequiredMixin, ListView):
 def todo_check(request, todo_id):
     todo = get_object_or_404(models.ToDoTask, pk=todo_id)
     if todo.user != request.user:
-        return Http404
+        return Http404()
     todo.is_done = False if todo.is_done else True
     todo.save()
 
@@ -107,7 +107,7 @@ def todo_check(request, todo_id):
 def todo_delete(request, todo_id):
     todo = get_object_or_404(models.ToDoTask, pk=todo_id)
     if todo.user != request.user:
-        return Http404
+        return Http404()
     todo.delete()
     return redirect("todolist")
 
@@ -167,3 +167,11 @@ class HabitDetailView(LoginRequiredMixin, DetailView):
             return self.model.objects.filter(user=self.request.user)
         else:
             return self.model.ToDoTask.none()
+
+
+def habit_check(request, pk):
+    habit = get_object_or_404(models.Habit, pk=pk)
+    if habit.user != request.user:
+        return Http404()
+    habit.change_completion()
+    return redirect("habitslist")

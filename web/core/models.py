@@ -74,7 +74,13 @@ class Habit(models.Model):
 
     @property
     def is_completed_today(self):
-        return HabitDailyRecord.objects.filter(habit=self, date_completed=datetime.date.today())
+        return HabitDailyRecord.objects.filter(habit=self, date_completed=datetime.date.today()).exists()
+
+    def change_completion(self):
+        if self.is_completed_today:
+            HabitDailyRecord.objects.filter(habit=self, date_completed=datetime.date.today()).first().delete()
+        else:
+            HabitDailyRecord.objects.create(habit=self, date_completed=datetime.date.today())
 
     @property
     def html_calendar(self):
