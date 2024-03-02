@@ -175,3 +175,17 @@ def habit_check(request, pk):
         return Http404()
     habit.change_completion()
     return redirect("habitslist")
+
+
+class HabitCreateView(LoginRequiredMixin, CreateView):
+    model = models.Habit
+    form_class = forms.HabitForm
+    template_name = "core/habitcreate.html"
+
+    success_url = reverse_lazy("habitslist")
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        obj.save()
+        return redirect(self.success_url)

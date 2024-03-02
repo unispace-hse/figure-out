@@ -43,3 +43,9 @@ class ToDoTaskForm(forms.ModelForm):
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
+
+
+class HabitForm(forms.ModelForm):
+    class Meta:
+        model = models.Habit
+        fields = ("title", "description", "goal")

@@ -20,4 +20,5 @@ urlpatterns = [
     path("habits/list", views.HabitsListView.as_view(), name="habitslist"),
     path("habits/detail/<int:pk>", views.HabitDetailView.as_view(), name="habitdetail"),
     path("habits/check/<int:pk>", views.habit_check, name="habitcheck"),
+    path("habits/create", views.HabitCreateView.as_view(), name="habitcreate"),
 ]

@@ -14,7 +14,7 @@ class Account(models.Model):
     GENDER = [
         ("M", "MALE"),
         ("F", "FEMALE"),
-        ("O", "Other")
+        ("O", "OTHER")
     ]
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     birthday = models.DateField()
