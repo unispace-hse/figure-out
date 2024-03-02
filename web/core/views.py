@@ -189,3 +189,17 @@ class HabitCreateView(LoginRequiredMixin, CreateView):
         obj.user = self.request.user
         obj.save()
         return redirect(self.success_url)
+
+
+@login_required
+def habit_update_view(request, pk):
+    obj = get_object_or_404(models.Habit, id=pk)
+    if obj.user != request.user:
+        return Http404()
+    if request.method == "POST":
+        form = forms.HabitForm(request.POST, instance=obj)
+        if form.is_valid():
+            form.save()
+            return redirect("habitslist")
+    form = forms.HabitForm(instance=obj)
+    return render(request, "core/habitcreate.html", {"form": form})

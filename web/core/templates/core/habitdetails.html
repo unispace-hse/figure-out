@@ -33,9 +33,9 @@
 
 
 
-    <form method="post" action="{% url "root" %}">
+    <form method="post" action="{% url "habitupdate" object.pk %}">
         {% csrf_token %}
-        <button onclick="this.form.submit()" class="btn btn-primary btn-lg btn-block">Update Task</button>
+        <button onclick="this.form.submit()" class="btn btn-primary btn-lg btn-block">Update Habit</button>
     </form>
 
 
