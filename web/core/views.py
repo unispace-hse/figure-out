@@ -148,3 +148,11 @@ def todo_task_update_view(request, pk):
             return redirect("todolist")
     form = forms.ToDoTaskForm(instance=obj, request=request)
     return render(request, "core/todocreate.html", {"form": form})
+
+
+class HabitsListView(LoginRequiredMixin, ListView):
+    template_name = "core/habitslist.html"
+    context_object_name = "habits_list"
+
+    def get_queryset(self):
+        return models.Habit.objects.filter(user=self.request.user)

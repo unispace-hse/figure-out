@@ -2,6 +2,7 @@
 Django models
 """
 
+import datetime
 from django.db import models
 from django.contrib.auth import get_user_model
 
@@ -69,6 +70,10 @@ class Habit(models.Model):
     goal = models.IntegerField(default=0)
     is_done = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def is_completed_today(self):
+        return HabitDailyRecord.objects.filter(habit=self, date_completed=datetime.date.today())
 
 
 class HabitDailyRecord(models.Model):

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Habits{% endblock %}
+
+{% block content %}
+    <h1>Habits List</h1>
+    <h2>Habits need to be completed today</h2>
+    <ul class="list-group">
+        {% for habit in habits_list %}
+            {% csrf_token %}
+            {% if not habit.is_completed_today and not habit.is_done %}
+                <li class="list-group-item list-group-item-action">
+                    <div class="form-check">
+                        <!-- Replace to check url -->
+                        <form method="post" action="{% url "root" %}">
+                            {% csrf_token %}
+                            <input class="form-check-input" type="checkbox" value="" id=""
+                                   title="mark as done for today"
+                                   onchange="this.form.submit()"
+                                   name="is_completed_today">
+                            <label class="form-check-label" for="flexCheckChecked">
+                                {{ habit.title }}
+                            </label>
+                            <!-- Replace to check url -->
+                            <a class="btn btn-primary" href="{% url 'root' %}" role="button" title="Details">Details</a>
+                        </form>
+                    </div>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+    <h2>Habits completed for today</h2>
+    <ul class="list-group">
+        {% for habit in habits_list %}
+            {% csrf_token %}
+            {% if habit.is_completed_today %}
+                <li class="list-group-item list-group-item-action">
+                    <div class="form-check">
+                        <!-- Replace to check url -->
+                        <form method="post" action="{% url "root" %}">
+                            {% csrf_token %}
+                            <input class="form-check-input" type="checkbox" value="" id=""
+                                   title="mark as undone for today"
+                                   onchange="this.form.submit()"
+                                   name="is_completed_today">
+                            <label class="form-check-label" for="flexCheckChecked">
+                                {{ habit.title }}
+                            </label>
+                            <!-- Replace to check url -->
+                            <a class="btn btn-primary" href="{% url 'root' %}" role="button" title="Details">Details</a>
+                        </form>
+                    </div>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+
+    <h2>Archive</h2>
+    <ul class="list-group">
+        {% for habit in habits_list %}
+            {% csrf_token %}
+            {% if habit.is_done %}
+                <li class="list-group-item list-group-item-action">
+                    <div class="form-check">
+                            <p>
+                                {{ habit.title }}
+                            </p>
+                            <!-- Replace to check url -->
+                            <a class="btn btn-primary" href="{% url 'root' %}" role="button" title="Details">Details</a>
+                    </div>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+{% endblock %}
