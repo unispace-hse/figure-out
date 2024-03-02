@@ -5,6 +5,7 @@ Django models
 import datetime
 from django.db import models
 from django.contrib.auth import get_user_model
+from . import habits_html_calendar
 
 
 class Account(models.Model):
@@ -74,6 +75,11 @@ class Habit(models.Model):
     @property
     def is_completed_today(self):
         return HabitDailyRecord.objects.filter(habit=self, date_completed=datetime.date.today())
+
+    @property
+    def html_calendar(self):
+        custom_calendar = habits_html_calendar.HabitsHTMLCalendar(self.created_at, self.created_at + datetime.timedelta(self.goal))
+        return str(custom_calendar.formatmonth(datetime.date.today().year, datetime.date.today().month, withyear=True))
 
 
 class HabitDailyRecord(models.Model):

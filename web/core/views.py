@@ -156,3 +156,14 @@ class HabitsListView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         return models.Habit.objects.filter(user=self.request.user)
+
+
+class HabitDetailView(LoginRequiredMixin, DetailView):
+    model = models.Habit
+    template_name = "core/habitdetails.html"
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            return self.model.objects.filter(user=self.request.user)
+        else:
+            return self.model.ToDoTask.none()

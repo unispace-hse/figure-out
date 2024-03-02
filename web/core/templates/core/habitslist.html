@@ -20,8 +20,7 @@
                             <label class="form-check-label" for="flexCheckChecked">
                                 {{ habit.title }}
                             </label>
-                            <!-- Replace to check url -->
-                            <a class="btn btn-primary" href="{% url 'root' %}" role="button" title="Details">Details</a>
+                            <a class="btn btn-primary" href="{% url "habitdetail" habit.id %}" role="button" title="Details">Details</a>
                         </form>
                     </div>
                 </li>
@@ -46,8 +45,7 @@
                             <label class="form-check-label" for="flexCheckChecked">
                                 {{ habit.title }}
                             </label>
-                            <!-- Replace to check url -->
-                            <a class="btn btn-primary" href="{% url 'root' %}" role="button" title="Details">Details</a>
+                            <a class="btn btn-primary" href="{% url "habitdetail" habit.id %}" role="button" title="Details">Details</a>
                         </form>
                     </div>
                 </li>
@@ -66,7 +64,7 @@
                                 {{ habit.title }}
                             </p>
                             <!-- Replace to check url -->
-                            <a class="btn btn-primary" href="{% url 'root' %}" role="button" title="Details">Details</a>
+                            <a class="btn btn-primary" href="{% url "habitdetail" habit.id %}" role="button" title="Details">Details</a>
                     </div>
                 </li>
             {% endif %}

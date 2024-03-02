@@ -17,5 +17,6 @@ urlpatterns = [
     path("todo/delete/<int:todo_id>", views.todo_delete, name="tododelete"),
     path("todo/detail/<int:pk>", views.ToDoTaskDetailView.as_view(), name="tododetail"),
     path("todo/update/<int:pk>", views.todo_task_update_view, name="todoupdate"),
-    path("habits/list", views.HabitsListView.as_view(), name="habitslist")
+    path("habits/list", views.HabitsListView.as_view(), name="habitslist"),
+    path("habits/detail/<int:pk>", views.HabitDetailView.as_view(), name="habitdetail"),
 ]
