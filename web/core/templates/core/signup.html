@@ -7,7 +7,7 @@
     <h1>Sign up</h1>
     <form method='post'>
         {% csrf_token %}
-        {{ form|crispy }}
+        {% crispy form %}
         <button type="submit" class="btn btn-success">Save person</button>
     </form>
 {% endblock %}
