@@ -23,18 +23,16 @@
                 <a class="nav-link" href={% url "root" %}>Home <span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href={% url "root" %}>Link</a>
+                <a class="nav-link" href={% url "todolist" %}>Todo</a>
               </li>
-              <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href={% url "root" %} id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                  Dropdown
-                </a>
-                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <a class="dropdown-item" href={% url "root" %}>Action</a>
-                  <a class="dropdown-item" href={% url "root" %}>Another action</a>
-                  <div class="dropdown-divider"></div>
-                  <a class="dropdown-item" href={% url "root" %}>Something else here</a>
-                </div>
+              <li class="nav-item">
+                <a class="nav-link" href={% url "root" %}>Tasks</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href={% url "habitslist" %}>Habits</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href={% url "root" %}>Today's feed</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link disabled" href={% url "root" %}>Disabled</a>

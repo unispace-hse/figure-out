@@ -12,7 +12,7 @@ urlpatterns = [
     path("signup/", views.user_signup, name="signup"),
     path("logout/", views.user_logout, name="logout"),
     path("todo/create/", views.ToDoTaskCreateView.as_view(), name="todotaskcreate"),
-    path("todo/list", views.HabitsListView.as_view(), name="todolist"),
+    path("todo/list", views.ToDoListView.as_view(), name="todolist"),
     path("todo/check/<int:todo_id>", views.todo_check, name="todocheck"),
     path("todo/delete/<int:todo_id>", views.todo_delete, name="tododelete"),
     path("todo/detail/<int:pk>", views.ToDoTaskDetailView.as_view(), name="tododetail"),
@@ -22,4 +22,5 @@ urlpatterns = [
     path("habits/check/<int:pk>", views.habit_check, name="habitcheck"),
     path("habits/create", views.HabitCreateView.as_view(), name="habitcreate"),
     path("habits/update/<int:pk>", views.habit_update_view, name="habitupdate"),
+    path("feed/", views.habit_update_view, name="todaysfeed"),
 ]
