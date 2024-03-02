@@ -5,6 +5,7 @@ Django models
 import datetime
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.contrib.postgres.fields import ArrayField
 from . import habits_html_calendar
 
 
@@ -16,6 +17,11 @@ class Account(models.Model):
         ("F", "FEMALE"),
         ("O", "OTHER")
     ]
+    # Нумерация с нуля
+    Q1 = [(i, i) for i in range(4)]
+    Q2 = [(i, i) for i in range(16)]
+    Q3 = [(i, i) for i in range(20)]
+
     user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
     birthday = models.DateField()
     gender = models.CharField(
@@ -23,6 +29,9 @@ class Account(models.Model):
         choices=GENDER,
         default="O"
     )
+    q1 = models.IntegerField(default=0, choices=Q1)
+    q2 = ArrayField(models.IntegerField(choices=Q2), default=list)
+    q3 = ArrayField(models.IntegerField(choices=Q3), default=list)
 
 
 class ToDoTag(models.Model):

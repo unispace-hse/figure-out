@@ -1,6 +1,7 @@
 """
 Core views
 """
+import datetime
 
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView, UpdateView
@@ -9,7 +10,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
-from django.http import Http404
+from django.http import Http404, HttpResponse
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from . import forms
@@ -53,7 +54,7 @@ def user_signup(request):
             )
             login(request, user)
 
-            return redirect("root")
+            return redirect("priorityservice")
         return render(request, "core/signup.html", {"form": form})
     form = forms.RegisterForm()
     return render(request, "core/signup.html", {"form": form})
@@ -203,3 +204,55 @@ def habit_update_view(request, pk):
             return redirect("habitslist")
     form = forms.HabitForm(instance=obj)
     return render(request, "core/habitcreate.html", {"form": form})
+
+
+@login_required
+def setup_priority_service(request):
+    if request.method == "POST":
+        selected_choice = request.POST['choice']
+        acc = models.Account.objects.filter(user=request.user).first()
+        acc.q1 = int(selected_choice)
+        acc.save()
+        return redirect("character")
+    return render(request, "core/setup_priority_service.html")
+
+
+@login_required
+def setup_character(request):
+    # User have passed personalization test
+    if models.Account.objects.filter(user=request.user).first().q2:
+        return Http404()
+
+
+    if request.method == "POST":
+        arr = []
+        for key, value in request.POST.dict().items():
+            if key != "csrfmiddlewaretoken":
+                arr.append(int(value))
+        acc = models.Account.objects.filter(user=request.user).first()
+        acc.q2 = arr
+        acc.save()
+        return redirect("experience")
+    return render(request, "core/setup_character.html")
+
+
+@login_required
+def setup_experience(request):
+    # User have passed personalization test
+    if models.Account.objects.filter(user=request.user).first().q3:
+        return Http404()
+
+    if request.method == "POST":
+        arr = []
+        for key, value in request.POST.dict().items():
+            if key != "csrfmiddlewaretoken":
+                arr.append(int(value))
+        acc = models.Account.objects.filter(user=request.user).first()
+        acc.q3 = arr
+        acc.save()
+        return redirect("root")
+    if (datetime.date.today() - models.Account.objects.filter(user=request.user).first().birthday).days/365.2425:
+        age_category = 'a'
+    else:
+        age_category = 'b'
+    return render(request, "core/setup_experience.html", context={"age_category": age_category})
