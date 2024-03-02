@@ -2,11 +2,16 @@
 Core views
 """
 
-from django.views.generic.edit import CreateView
-from django.shortcuts import render, redirect
+from django.views.generic import ListView
+from django.views.generic.edit import CreateView, UpdateView
+from django.views.generic.detail import DetailView
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
+from django.http import Http404
 from django.urls import reverse_lazy
+from django.contrib.auth.decorators import login_required
 from . import forms
 from . import models
 
@@ -48,28 +53,153 @@ def user_signup(request):
             )
             login(request, user)
 
-            return redirect("login")
+            return redirect("root")
         return render(request, "core/signup.html", {"form": form})
     form = forms.RegisterForm()
     return render(request, "core/signup.html", {"form": form})
 
 
-# def todotask_create(request):
-#     form = forms.ToDoTaskForm()
-#     return render(request, "core/todocreate.html", context={"form": form})
-
-class AddToDoTask(CreateView):
-    model = models.ToDoTask
-    form_class = forms.ToDoTaskForm
-    template_name = "core/todocreate.html"
-    success_url = reverse_lazy("root")
-
-    def get_form_kwargs(self):
-        kwargs = super(AddToDoTask, self).get_form_kwargs()
-        kwargs["request"] = self.request
-        return kwargs
-
-
+@login_required
 def user_logout(request):
     logout(request)
     return redirect("root")
+
+
+class ToDoTaskCreateView(LoginRequiredMixin, CreateView):
+    model = models.ToDoTask
+    form_class = forms.ToDoTaskForm
+    template_name = "core/todocreate.html"
+
+    success_url = reverse_lazy("todolist")
+
+    def get_form_kwargs(self):
+        kwargs = super(ToDoTaskCreateView, self).get_form_kwargs()
+        kwargs["request"] = self.request
+        return kwargs
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        obj.save()
+        return redirect(self.success_url)
+
+
+class ToDoListView(LoginRequiredMixin, ListView):
+    template_name = "core/todolist.html"
+    context_object_name = "todo_list"
+
+    def get_queryset(self):
+        return models.ToDoTask.objects.filter(user=self.request.user).order_by("-notification_datetime")
+
+
+@login_required
+def todo_check(request, todo_id):
+    todo = get_object_or_404(models.ToDoTask, pk=todo_id)
+    if todo.user != request.user:
+        return Http404()
+    todo.is_done = False if todo.is_done else True
+    todo.save()
+
+    return redirect("todolist")
+
+
+@login_required
+def todo_delete(request, todo_id):
+    todo = get_object_or_404(models.ToDoTask, pk=todo_id)
+    if todo.user != request.user:
+        return Http404()
+    todo.delete()
+    return redirect("todolist")
+
+
+class ToDoTaskDetailView(LoginRequiredMixin, DetailView):
+    model = models.ToDoTask
+    template_name = "core/tododetails.html"
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            return models.ToDoTask.objects.filter(user=self.request.user)
+        else:
+            return models.ToDoTask.none()
+
+
+# class ToDoTaskUpdateView(LoginRequiredMixin, UpdateView):
+#     model = models.ToDoTask
+#     template_name = "core/todocreate.html"
+#     form_class = forms.ToDoTaskForm
+#     # fields = ["title"]
+#     success_url = reverse_lazy("todolist")
+#
+#     def get_form_kwargs(self):
+#         kwargs = super(ToDoTaskUpdateView, self).get_form_kwargs()
+#         kwargs["request"] = self.request
+#         return kwargs
+
+
+@login_required
+def todo_task_update_view(request, pk):
+    obj = get_object_or_404(models.ToDoTask, id=pk)
+    if obj.user != request.user:
+        return Http404()
+    if request.method == "POST":
+        form = forms.ToDoTaskForm(request.POST, instance=obj, request=request)
+        if form.is_valid():
+            form.save()
+            return redirect("todolist")
+    form = forms.ToDoTaskForm(instance=obj, request=request)
+    return render(request, "core/todocreate.html", {"form": form})
+
+
+class HabitsListView(LoginRequiredMixin, ListView):
+    template_name = "core/habitslist.html"
+    context_object_name = "habits_list"
+
+    def get_queryset(self):
+        return models.Habit.objects.filter(user=self.request.user)
+
+
+class HabitDetailView(LoginRequiredMixin, DetailView):
+    model = models.Habit
+    template_name = "core/habitdetails.html"
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            return self.model.objects.filter(user=self.request.user)
+        else:
+            return self.model.ToDoTask.none()
+
+
+def habit_check(request, pk):
+    habit = get_object_or_404(models.Habit, pk=pk)
+    if habit.user != request.user:
+        return Http404()
+    habit.change_completion()
+    return redirect("habitslist")
+
+
+class HabitCreateView(LoginRequiredMixin, CreateView):
+    model = models.Habit
+    form_class = forms.HabitForm
+    template_name = "core/habitcreate.html"
+
+    success_url = reverse_lazy("habitslist")
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        obj.save()
+        return redirect(self.success_url)
+
+
+@login_required
+def habit_update_view(request, pk):
+    obj = get_object_or_404(models.Habit, id=pk)
+    if obj.user != request.user:
+        return Http404()
+    if request.method == "POST":
+        form = forms.HabitForm(request.POST, instance=obj)
+        if form.is_valid():
+            form.save()
+            return redirect("habitslist")
+    form = forms.HabitForm(instance=obj)
+    return render(request, "core/habitcreate.html", {"form": form})

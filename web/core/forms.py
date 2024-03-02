@@ -10,9 +10,9 @@ from datetime import  datetime
 from crispy_forms.helper import FormHelper
 
 
-class CustomModelMultipleChoiceField(forms.ModelMultipleChoiceField):
-    def label_from_instance(self, member):
-        return "%s" % member.title
+class TagMultipleChoiceField(forms.ModelMultipleChoiceField):
+    def label_from_instance(self, tag: models.ToDoTag):
+        return f"{tag.emoji}: {tag.title}"
 
 
 class RegisterForm(UserCreationForm):
@@ -37,7 +37,7 @@ class RegisterForm(UserCreationForm):
 
 
 class ToDoTaskForm(forms.ModelForm):
-    def __init__(self, *args, user=None, **kwargs):
+    def __init__(self, *args, **kwargs):
         self.request = kwargs.pop("request")
         super(ToDoTaskForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
@@ -47,7 +47,14 @@ class ToDoTaskForm(forms.ModelForm):
         model = models.ToDoTask
         fields = ("title", "description", "notification_datetime", "tags", "priority_level")
 
-    tags = CustomModelMultipleChoiceField(
+    tags = TagMultipleChoiceField(
         queryset=None,
-        widget=forms.CheckboxSelectMultiple
+        widget=forms.CheckboxSelectMultiple,
+        required=False
     )
+
+
+class HabitForm(forms.ModelForm):
+    class Meta:
+        model = models.Habit
+        fields = ("title", "description", "goal")
