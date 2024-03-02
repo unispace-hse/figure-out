@@ -3,8 +3,14 @@
 
 {% block content %}
     <h1>Habits List</h1>
-    <h2>Habits need to be completed today</h2>
+
+<hr>
     <ul class="list-group">
+        <a href="{% url 'habitcreate' %}" class="btn btn-info" type="button">Add new Habit</a>
+        {% if habits_list|length == 0 %} <hr><h4>There are no habits. Add new habit to continue.</h4></hr> {% else %}
+        <hr>
+        <h2>Habits need to be completed today</h2>
+        </hr>
         {% for habit in habits_list %}
             {% csrf_token %}
             {% if not habit.is_completed_today and not habit.is_done %}
@@ -20,6 +26,7 @@
                                 {{ habit.title }}
                             </label>
                             <a class="btn btn-primary" href="{% url "habitdetail" habit.id %}" role="button" title="Details">Details</a>
+                            <a class="btn btn-primary" href="{% url "habitdelete" habit.id %}" role="button" title="delete">Delete</a>
                         </form>
                     </div>
                 </li>
@@ -45,6 +52,7 @@
                                 {{ habit.title }}
                             </label>
                             <a class="btn btn-primary" href="{% url "habitdetail" habit.id %}" role="button" title="Details">Details</a>
+                            <a class="btn btn-primary" href="{% url "habitdelete" habit.id %}" role="button" title="delete">Delete</a>
                         </form>
                     </div>
                 </li>
@@ -63,9 +71,12 @@
                                 {{ habit.title }}
                             </p>
                             <a class="btn btn-primary" href="{% url "habitdetail" habit.id %}" role="button" title="Details">Details</a>
+                            <a class="btn btn-primary" href="{% url "habitdelete" habit.id %}" role="button" title="delete">Delete</a>
                     </div>
                 </li>
             {% endif %}
         {% endfor %}
     </ul>
+{% endif %}
+</hr>
 {% endblock %}

@@ -177,6 +177,12 @@ def habit_check(request, pk):
     habit.change_completion()
     return redirect("habitslist")
 
+def habit_delete(request, pk):
+    habit = get_object_or_404(models.Habit, pk=pk)
+    if habit.user != request.user:
+        return Http404()
+    habit.delete()
+    return redirect("habitslist")
 
 class HabitCreateView(LoginRequiredMixin, CreateView):
     model = models.Habit

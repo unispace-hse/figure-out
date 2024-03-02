@@ -23,8 +23,8 @@
                             <label class="form-check-label" for="flexcheckchecked">
                                 {{ todo.title }}
                             </label>
-                            <a class="btn btn-primary" href="{% url 'tododelete' todo.id %}" role="button" title="delete">delete</a>
                             <a class="btn btn-primary" href="{% url 'tododetail' todo.pk %}" role="button" title="details">details</a>
+                            <a class="btn btn-primary" href="{% url 'tododelete' todo.id %}" role="button" title="delete">delete</a>
                         </form>
                     </div>
                 </li>
