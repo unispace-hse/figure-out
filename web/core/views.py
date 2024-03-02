@@ -4,6 +4,7 @@ Core views
 
 from django.views.generic import ListView
 from django.views.generic.edit import CreateView
+from django.views.generic.detail import DetailView
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -57,22 +58,22 @@ def user_signup(request):
     form = forms.RegisterForm()
     return render(request, "core/signup.html", {"form": form})
 
+
 @login_required
 def user_logout(request):
     logout(request)
     return redirect("root")
 
 
-class AddToDoTask(LoginRequiredMixin, CreateView):
-
+class ToDoTaskCreateView(LoginRequiredMixin, CreateView):
     model = models.ToDoTask
     form_class = forms.ToDoTaskForm
     template_name = "core/todocreate.html"
 
-    success_url = reverse_lazy("root")
+    success_url = reverse_lazy("todolist")
 
     def get_form_kwargs(self):
-        kwargs = super(AddToDoTask, self).get_form_kwargs()
+        kwargs = super(ToDoTaskCreateView, self).get_form_kwargs()
         kwargs["request"] = self.request
         return kwargs
 
@@ -92,7 +93,7 @@ class ToDoListView(LoginRequiredMixin, ListView):
 
 
 @login_required
-def todo_update(request, todo_id):
+def todo_check(request, todo_id):
     todo = get_object_or_404(models.ToDoTask, pk=todo_id)
     if todo.user != request.user:
         return Http404
@@ -100,3 +101,36 @@ def todo_update(request, todo_id):
     todo.save()
 
     return redirect("todolist")
+
+
+@login_required
+def todo_delete(request, todo_id):
+    todo = get_object_or_404(models.ToDoTask, pk=todo_id)
+    if todo.user != request.user:
+        return Http404
+    todo.delete()
+    return redirect("todolist")
+
+
+class ToDoTaskDetailView(LoginRequiredMixin, DetailView):
+    model = models.ToDoTask
+    template_name = "core/tododetails.html"
+
+    def get_queryset(self):
+        if self.request.user.is_authenticated:
+            return models.ToDoTask.objects.filter(user=self.request.user)
+        else:
+            return models.ToDoTask.none()
+
+
+class ToDoTaskUpdateView(LoginRequiredMixin, CreateView):
+    model = models.ToDoTask
+    form_class = forms.ToDoTaskForm
+    template_name = "core/todocreate.html"
+
+    success_url = reverse_lazy("todolist")
+
+    def get_form_kwargs(self):
+        kwargs = super(ToDoTaskUpdateView, self).get_form_kwargs()
+        kwargs["request"] = self.request
+        return kwargs
