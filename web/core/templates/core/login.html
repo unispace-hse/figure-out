@@ -7,7 +7,7 @@
     <h1>Login</h1>
     <form method='post'>
         {% csrf_token %}
-        {% crispy form %}
+        {{ form|crispy }}
         <button type="submit" class="btn btn-success">Save person</button>
 
         <hr class="mt-0 mb-4">
