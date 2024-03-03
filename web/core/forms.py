@@ -45,8 +45,6 @@ class ToDoTaskForm(forms.ModelForm):
         self.request = kwargs.pop("request")
         super(ToDoTaskForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
-        self.helper.form_action = us.reverse_lazy('todocreate')
-        self.helper.form_method = 'POST'
         self.helper.add_input(Submit('submit', 'Create task'))
         self.fields["tags"].queryset = models.ToDoTag.objects.filter(user=self.request.user)
 
