@@ -7,7 +7,7 @@
 
 <hr>
     <ul class="list-group">
-        <a href="{% url 'todotaskcreate' %}" class="btn btn-info" type="button">Add new ToDo</a>
+        <a href="{% url 'todocreate' %}" class="btn btn-info" type="button">Add new ToDo</a>
         {% if todo_list|length == 0 %}<hr><h3>There are no ToDos for now.<hr> Click the button below to add ToDo.</h3></hr>{% endif %}
         {% for todo in todo_list %}
             {% csrf_token %}

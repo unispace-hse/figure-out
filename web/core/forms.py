@@ -21,8 +21,8 @@ class RegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.helper = FormHelper(self)
-        self.helper.form_action = us.reverse_lazy('root')
-        self.helper.form_method = 'GET'
+        self.helper.form_action = us.reverse_lazy('signup')
+        self.helper.form_method = 'POST'
         self.helper.add_input(Submit('submit', 'Sign up'))
 
     gender = forms.ChoiceField(choices=models.Account.GENDER)
@@ -45,22 +45,23 @@ class ToDoTaskForm(forms.ModelForm):
         self.request = kwargs.pop("request")
         super(ToDoTaskForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper(self)
-        self.helper.form_action = us.reverse_lazy('root')
-        self.helper.form_method = 'GET'
+        self.helper.form_action = us.reverse_lazy('todocreate')
+        self.helper.form_method = 'POST'
         self.helper.add_input(Submit('submit', 'Create task'))
         self.fields["tags"].queryset = models.ToDoTag.objects.filter(user=self.request.user)
 
     class Meta:
         model = models.ToDoTask
-        fields = ("title", "description", "notification_date", "tags", "priority_level")
+        fields = ("title", "description", "notification_datetime", "tags", "priority_level")
 
     tags = TagMultipleChoiceField(
         queryset=None,
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-    notification_date = forms.DateField(label="Notification date", widget=forms.DateInput(attrs={'type': 'date',
-                                                                                                 'max': datetime.now()}))
+    notification_datetime = forms.DateTimeField(label="Notification datetime",
+                                                widget=forms.DateTimeInput(
+                                                    attrs={'max': datetime.now()}))
 
 
 class HabitForm(forms.ModelForm):
