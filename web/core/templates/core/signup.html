@@ -5,9 +5,7 @@
 
 {% block content %}
     <h1>Sign up</h1>
-    <form method='post'>
         {% csrf_token %}
-        {% crispy form %}
+        {% crispy form form.helper %}
         <button type="submit" class="btn btn-success">Save person</button>
-    </form>
 {% endblock %}

@@ -5,9 +5,6 @@
 
 {% block content %}
     <h1>ToDoTask Create</h1>
-    <form method='post'>
         {% csrf_token %}
-        {{ form|crispy }}
-        <button type="submit" class="btn btn-success">Save ToDo</button>
-    </form>
+        {% crispy form form.helper %}
 {% endblock %}
