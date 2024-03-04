@@ -22,7 +22,7 @@ class CustomizedUserAdmin(UserAdmin):
     Customized UserAdmin
     """
 
-    inlines = (AccountInLine, )
+    inlines = (AccountInLine,)
 
 
 admin.site.unregister(Group)

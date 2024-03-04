@@ -6,13 +6,21 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0002_account_gender'),
+        ("core", "0002_account_gender"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='todotask',
-            name='priority_level',
-            field=models.IntegerField(choices=[(0, 'No Priority'), (1, 'Low Priority'), (2, 'Medium Priority'), (3, 'High Priority')], default=0),
+            model_name="todotask",
+            name="priority_level",
+            field=models.IntegerField(
+                choices=[
+                    (0, "No Priority"),
+                    (1, "Low Priority"),
+                    (2, "Medium Priority"),
+                    (3, "High Priority"),
+                ],
+                default=0,
+            ),
         ),
     ]

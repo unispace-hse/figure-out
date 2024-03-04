@@ -6,14 +6,14 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0012_event_created_at'),
+        ("core", "0012_event_created_at"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='event',
-            name='title',
-            field=models.CharField(default='', max_length=128),
+            model_name="event",
+            name="title",
+            field=models.CharField(default="", max_length=128),
             preserve_default=False,
         ),
     ]

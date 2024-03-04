@@ -21,7 +21,7 @@ class HabitsHTMLCalendar(HTMLCalendar):
             if self.start_date <= date <= self.end_date:
                 return '<td class="table-success">{}</td>'.format(day)
             else:
-                return '<td>{}</td>'.format(day)
+                return "<td>{}</td>".format(day)
 
     def formatmonth(self, year, month, withyear=True):
         """
@@ -31,12 +31,12 @@ class HabitsHTMLCalendar(HTMLCalendar):
         v = []
         a = v.append
         a('<table border="0" cellpadding="0" cellspacing="0" class="table">')
-        a('\n')
+        a("\n")
         a(self.formatmonthname(year, month, withyear=withyear))
-        a('\n')
+        a("\n")
         a(self.formatweekheader())
-        a('\n')
+        a("\n")
         for week in self.monthdays2calendar(year, month):
             a(self.formatweek(week))
-        a('</table>')
-        return ''.join(v)
+        a("</table>")
+        return "".join(v)

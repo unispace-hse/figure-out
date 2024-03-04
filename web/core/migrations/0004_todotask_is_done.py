@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0003_todotask_priority_level'),
+        ("core", "0003_todotask_priority_level"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='todotask',
-            name='is_done',
+            model_name="todotask",
+            name="is_done",
             field=models.BooleanField(default=False),
         ),
     ]

@@ -1,6 +1,7 @@
 """
 Core views
 """
+
 import datetime
 
 from django.views.generic import ListView
@@ -50,8 +51,7 @@ def user_signup(request):
             # login user
             cd = form.cleaned_data
             user = authenticate(
-                username=cd.get("username"),
-                password=cd.get("password1")
+                username=cd.get("username"), password=cd.get("password1")
             )
             login(request, user)
 
@@ -91,7 +91,9 @@ class ToDoListView(LoginRequiredMixin, ListView):
     context_object_name = "todo_list"
 
     def get_queryset(self):
-        return models.ToDoTask.objects.filter(user=self.request.user).order_by("-notification_date")
+        return models.ToDoTask.objects.filter(user=self.request.user).order_by(
+            "-notification_date"
+        )
 
 
 @login_required
@@ -226,7 +228,7 @@ def habit_update_view(request, pk):
 @login_required
 def setup_priority_service(request):
     if request.method == "POST":
-        selected_choice = request.POST['choice']
+        selected_choice = request.POST["choice"]
         acc = models.Account.objects.filter(user=request.user).first()
         acc.q1 = int(selected_choice)
         acc.save()
@@ -267,11 +269,16 @@ def setup_experience(request):
         acc.q3 = arr
         acc.save()
         return redirect("root")
-    if (datetime.date.today() - models.Account.objects.filter(user=request.user).first().birthday).days/365.2425:
-        age_category = 'a'
+    if (
+        datetime.date.today()
+        - models.Account.objects.filter(user=request.user).first().birthday
+    ).days / 365.2425:
+        age_category = "a"
     else:
-        age_category = 'b'
-    return render(request, "core/setup_experience.html", context={"age_category": age_category})
+        age_category = "b"
+    return render(
+        request, "core/setup_experience.html", context={"age_category": age_category}
+    )
 
 
 class EventCreateView(CreateView):
@@ -281,10 +288,18 @@ class EventCreateView(CreateView):
     template_name = "core/todays_feed.html"
 
     def get_context_data(self, **kwargs):
-        completed_todos = models.Account.objects.get(user=self.request.user).get_completed_todos_count
-        skipped_todos = models.Account.objects.get(user=self.request.user).get_skipped_todos_count
-        completed_habits = models.Account.objects.get(user=self.request.user).get_completed_habits_count
-        skipped_habits = models.Account.objects.get(user=self.request.user).get_skipped_habits_count
+        completed_todos = models.Account.objects.get(
+            user=self.request.user
+        ).get_completed_todos_count
+        skipped_todos = models.Account.objects.get(
+            user=self.request.user
+        ).get_skipped_todos_count
+        completed_habits = models.Account.objects.get(
+            user=self.request.user
+        ).get_completed_habits_count
+        skipped_habits = models.Account.objects.get(
+            user=self.request.user
+        ).get_skipped_habits_count
         kwargs["score"] = 9.45
         kwargs["skipped_todos"] = skipped_todos
         kwargs["completed_todos"] = completed_todos
