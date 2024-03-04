@@ -9,16 +9,43 @@ class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('core', '0010_account_q3'),
+        ("core", "0010_account_q3"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Event',
+            name="Event",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('type', models.IntegerField(choices=[(0, 'Concert/Cinema/Theater'), (1, 'Work or School'), (2, 'Planned meeting with friends, co-workers'), (3, 'Quality time in relationship'), (4, 'Unplanned meeting after work/school')], default=4)),
-                ('user', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='events', to=settings.AUTH_USER_MODEL)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "type",
+                    models.IntegerField(
+                        choices=[
+                            (0, "Concert/Cinema/Theater"),
+                            (1, "Work or School"),
+                            (2, "Planned meeting with friends, co-workers"),
+                            (3, "Quality time in relationship"),
+                            (4, "Unplanned meeting after work/school"),
+                        ],
+                        default=4,
+                    ),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        related_name="events",
+                        to=settings.AUTH_USER_MODEL,
+                    ),
+                ),
             ],
         ),
     ]

@@ -7,13 +7,36 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0007_account_q1'),
+        ("core", "0007_account_q1"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='account',
-            name='q2',
-            field=django.contrib.postgres.fields.ArrayField(base_field=models.IntegerField(choices=[(0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (9, 9), (10, 10), (11, 11), (12, 12), (13, 13), (14, 14), (15, 15)]), default=[], size=None),
+            model_name="account",
+            name="q2",
+            field=django.contrib.postgres.fields.ArrayField(
+                base_field=models.IntegerField(
+                    choices=[
+                        (0, 0),
+                        (1, 1),
+                        (2, 2),
+                        (3, 3),
+                        (4, 4),
+                        (5, 5),
+                        (6, 6),
+                        (7, 7),
+                        (8, 8),
+                        (9, 9),
+                        (10, 10),
+                        (11, 11),
+                        (12, 12),
+                        (13, 13),
+                        (14, 14),
+                        (15, 15),
+                    ]
+                ),
+                default=[],
+                size=None,
+            ),
         ),
     ]
