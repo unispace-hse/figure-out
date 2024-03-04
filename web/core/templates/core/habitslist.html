@@ -15,18 +15,22 @@
             {% csrf_token %}
             {% if not habit.is_completed_today and not habit.is_done %}
                 <li class="list-group-item list-group-item-action">
-                    <div class="form-check">
+                    <div class="form-check" style="text-align: left">
                         <form method="post" action="{% url "habitcheck" habit.id %}">
                             {% csrf_token %}
-                            <input class="form-check-input" type="checkbox" value="" id=""
-                                   title="mark as done for today"
-                                   onchange="this.form.submit()"
-                                   name="is_completed_today">
-                            <label class="form-check-label" for="flexCheckChecked">
-                                {{ habit.title }}
-                            </label>
-                            <a class="btn btn-primary" href="{% url "habitdetail" habit.id %}" role="button" title="Details">Details</a>
-                            <a class="btn btn-primary" href="{% url "habitdelete" habit.id %}" role="button" title="delete">Delete</a>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+                                       title="mark as done for today"
+                                       onchange="this.form.submit()"
+                                       name="is_completed_today"
+                                       style="width:15px; height:25px;">
+                                <label class="form-check-label" for="flexCheckDefault">
+                                    {{ habit.title }}
+                                </label>
+                                <a class="btn btn-primary" href="{% url 'habitdetail' habit.id %}" role="button" title="Details">Details</a>
+                                <a class="btn btn-primary" href="{% url 'habitdelete' habit.id %}" role="button" title="delete">Delete</a>
+                            </div>
+
                         </form>
                     </div>
                 </li>
@@ -40,19 +44,22 @@
             {% csrf_token %}
             {% if habit.is_completed_today %}
                 <li class="list-group-item list-group-item-action">
-                    <div class="form-check">
+                    <div class="form-check" style="text-align: left">
                         <form method="post" action="{% url "habitcheck" habit.id %}">
                             {% csrf_token %}
-                            <input class="form-check-input" type="checkbox" value="" id=""
-                                   title="mark as undone for today"
-                                   checked
-                                   onchange="this.form.submit()"
-                                   name="is_completed_today">
-                            <label class="form-check-label" for="flexCheckChecked">
-                                {{ habit.title }}
-                            </label>
-                            <a class="btn btn-primary" href="{% url "habitdetail" habit.id %}" role="button" title="Details">Details</a>
-                            <a class="btn btn-primary" href="{% url "habitdelete" habit.id %}" role="button" title="delete">Delete</a>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id=""
+                                    title="mark as undone for today"
+                                    checked
+                                    onchange="this.form.submit()"
+                                    name="is_completed_today"
+                                    style="width:15px; height:25px;">
+                                <label class="form-check-label" for="flexCheckChecked">
+                                    {{ habit.title }}
+                                </label>
+                                <a class="btn btn-primary" href="{% url "habitdetail" habit.id %}" role="button" title="Details">Details</a>
+                                <a class="btn btn-primary" href="{% url "habitdelete" habit.id %}" role="button" title="delete">Delete</a>
+                            </div>
                         </form>
                     </div>
                 </li>
