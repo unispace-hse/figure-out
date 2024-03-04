@@ -59,8 +59,8 @@ class ToDoTask(models.Model):
     title = models.CharField(max_length=128)
     description = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
-    notification_datetime = models.DateTimeField(null=True)
+    completed_at = models.DateField(null=True)
+    notification_date = models.DateTimeField(null=True)
     tags = models.ManyToManyField(ToDoTag, related_name="tasks", blank=True)
     priority_level = models.IntegerField(
         default=0,
@@ -151,4 +151,6 @@ class Event(models.Model):
     user = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, related_name="events"
     )
+    title = models.CharField(max_length=128)
     type = models.IntegerField(choices=EVENT_TYPE, default=4)
+    created_at = models.DateField(auto_now_add=True)

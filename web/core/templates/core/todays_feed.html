@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Today's feed{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h1>Today's feed</h1>
+    <hr>
+
+    <!-- Today's performance -->
+    <div class="card text-center">
+      <div class="card-header">
+        <h2>Assessing your today's performance</h2>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">You scored {{ score }} out of 10</h3>
+        <p class="card-text">Well done!</p>
+      </div>
+      <div class="card-footer text-muted">
+        last updated: now
+      </div>
+    </div>
+
+    <div class="card-group">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Completed TODOs: {{ completed_todos }}</h5>
+          <h5 class="card-title">Due today left TODOs: {{ skipped_todos }}</h5>
+          <p class="card-text">Well done!</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Completed Habits: {{ completed_habits }}</h5>
+          <h5 class="card-title">Due today left Habits: {{ skipped_habits }}</h5>
+          <p class="card-text">Well done!</p>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Completed SpaceLearning tasks: {{ completed_sl }}</h5>
+          <h5 class="card-title">Due today left SpaceLearning tasks: {{ skipped_sl }}</h5>
+          <p class="card-text">Well done!</p>
+        </div>
+      </div>
+    </div>
+
+    <hr>
+    <!-- Events -->
+    <h2>What events did you attend today?</h2>
+    <h5>Add new event to the list</h5>
+    {% csrf_token %}
+    {% crispy form form.helper %}
+
+    <h5>Today's events</h5>
+    <ul class="list-group">
+    {% for event in events %}
+      <li class="list-group-item">{{ event.title }}<span class="badge badge-secondary">{{ event.get_type_display }}</span></li>
+    {% endfor %}
+    </ul>
+
+
+{% endblock %}

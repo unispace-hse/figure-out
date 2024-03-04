@@ -90,7 +90,7 @@ class ToDoListView(LoginRequiredMixin, ListView):
     context_object_name = "todo_list"
 
     def get_queryset(self):
-        return models.ToDoTask.objects.filter(user=self.request.user).order_by("-notification_datetime")
+        return models.ToDoTask.objects.filter(user=self.request.user).order_by("-notification_date")
 
 
 @login_required
@@ -231,7 +231,6 @@ def setup_character(request):
     if models.Account.objects.filter(user=request.user).first().q2:
         return Http404()
 
-
     if request.method == "POST":
         arr = []
         for key, value in request.POST.dict().items():
@@ -264,3 +263,41 @@ def setup_experience(request):
     else:
         age_category = 'b'
     return render(request, "core/setup_experience.html", context={"age_category": age_category})
+
+
+class EventCreateView(CreateView):
+    model = models.Event
+    form_class = forms.EventForm
+    success_url = reverse_lazy("today")
+    template_name = "core/todays_feed.html"
+
+    def get_context_data(self, **kwargs):
+        kwargs["score"] = 9.45
+        kwargs["skipped_todos"] = 1
+        kwargs["completed_todos"] = 2
+        kwargs["skipped_habits"] = 3
+        kwargs["completed_habits"] = 4
+        kwargs["skipped_sl"] = 5
+        kwargs["completed_sl"] = 6
+        kwargs["events"] = models.Event.objects.filter(created_at=datetime.date.today())
+        return super(EventCreateView, self).get_context_data(**kwargs)
+
+    def form_valid(self, form):
+        obj = form.save(commit=False)
+        obj.user = self.request.user
+        obj.save()
+        return redirect(self.success_url)
+
+
+def todays_feed(request):
+
+    return render(request, "core/todays_feed.html",
+                  {
+                      "score": 9.45,
+                      "skipped_todos": 1,
+                      "completed_todos": 2,
+                      "skipped_habits": 3,
+                      "completed_habits": 4,
+                      "skipped_sl": 5,
+                      "completed_sl": 6
+                  })

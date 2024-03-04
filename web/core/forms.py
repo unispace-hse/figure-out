@@ -50,16 +50,15 @@ class ToDoTaskForm(forms.ModelForm):
 
     class Meta:
         model = models.ToDoTask
-        fields = ("title", "description", "notification_datetime", "tags", "priority_level")
+        fields = ("title", "description", "notification_date", "tags", "priority_level")
 
     tags = TagMultipleChoiceField(
         queryset=None,
         widget=forms.CheckboxSelectMultiple,
         required=False
     )
-    notification_datetime = forms.DateTimeField(label="Notification datetime",
-                                                widget=forms.DateTimeInput(
-                                                    attrs={'max': datetime.now()}))
+    notification_date = forms.DateField(label="Notification date",
+                                        widget=forms.DateInput(attrs={'type': "date"}))
 
 
 class HabitForm(forms.ModelForm):
@@ -74,3 +73,14 @@ class HabitForm(forms.ModelForm):
     class Meta:
         model = models.Habit
         fields = ("title", "description", "goal")
+
+
+class EventForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super(EventForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper(self)
+        self.helper.add_input(Submit('submit', 'Create Event'))
+
+    class Meta:
+        model = models.Event
+        fields = ("title", "type")
