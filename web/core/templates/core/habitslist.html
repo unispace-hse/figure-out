@@ -71,7 +71,7 @@
     <ul class="list-group">
         {% for habit in habits_list %}
             {% csrf_token %}
-            {% if habit.is_done %}
+            {% if habit.is_done and not habit.is_completed_today %}
                 <li class="list-group-item list-group-item-action">
                     <div class="form-check">
                             <p>

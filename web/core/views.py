@@ -181,6 +181,9 @@ def habit_check(request, pk):
     if habit.user != request.user:
         return Http404()
     habit.change_completion()
+
+    habit.is_done = habit.get_remaining_days == 0
+    habit.save()
     return redirect("habitslist")
 
 

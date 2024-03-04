@@ -93,8 +93,15 @@ class Habit(models.Model):
 
     @property
     def html_calendar(self):
-        custom_calendar = habits_html_calendar.HabitsHTMLCalendar(self.created_at, self.created_at + datetime.timedelta(self.goal))
+        custom_calendar = habits_html_calendar.HabitsHTMLCalendar(
+            self.created_at.date(), datetime.date.today() + datetime.timedelta(self.get_remaining_days))
+        if not self.is_completed_today:
+            custom_calendar.end_date -= datetime.timedelta(1)
         return str(custom_calendar.formatmonth(datetime.date.today().year, datetime.date.today().month, withyear=True))
+
+    @property
+    def get_remaining_days(self):
+        return self.goal - HabitDailyRecord.objects.filter(habit=self).count()
 
 
 class HabitDailyRecord(models.Model):

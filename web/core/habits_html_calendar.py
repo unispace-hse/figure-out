@@ -1,6 +1,6 @@
 from django.utils.timezone import get_current_timezone
 from calendar import HTMLCalendar
-from datetime import datetime
+import datetime
 
 
 class HabitsHTMLCalendar(HTMLCalendar):
@@ -17,7 +17,7 @@ class HabitsHTMLCalendar(HTMLCalendar):
             # day outside month
             return '<td class="noday">&nbsp;</td>'
         else:
-            date = datetime(self.year, self.month, day, tzinfo=get_current_timezone())
+            date = datetime.date(self.year, self.month, day)
             if self.start_date <= date <= self.end_date:
                 return '<td class="table-success">{}</td>'.format(day)
             else:
