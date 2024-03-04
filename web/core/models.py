@@ -6,6 +6,7 @@ import datetime
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
+from django.db.models import Q
 from . import habits_html_calendar
 
 
@@ -32,6 +33,25 @@ class Account(models.Model):
     q1 = models.IntegerField(default=0, choices=Q1)
     q2 = ArrayField(models.IntegerField(choices=Q2), default=list)
     q3 = ArrayField(models.IntegerField(choices=Q3), default=list)
+
+    @property
+    def get_completed_todos_count(self):
+        return ToDoTask.objects.filter(user=self.user, completed_at=datetime.date.today()).count()
+
+    @property
+    def get_skipped_todos_count(self):
+        return ToDoTask.objects.filter(
+            Q(user=self.user) & Q(notification_date=datetime.date.today()) & Q(completed_at__isnull=True)).count()
+
+    @property
+    def get_completed_habits_count(self):
+        return HabitDailyRecord.objects.filter(habit__user=self.user, date_completed=datetime.date.today()).count()
+
+    def get_skipped_habits_count(self):
+        return (Habit.objects.filter(is_done=False).count() -
+                self.get_completed_habits_count + HabitDailyRecord.objects.filter(date_completed=datetime.date.today(),
+                                                                            habit__is_done=True).count())
+
 
 
 class ToDoTag(models.Model):

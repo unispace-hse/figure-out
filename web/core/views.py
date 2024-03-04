@@ -281,13 +281,10 @@ class EventCreateView(CreateView):
     template_name = "core/todays_feed.html"
 
     def get_context_data(self, **kwargs):
-        completed_todos = models.ToDoTask.objects.filter(completed_at=datetime.date.today()).count()
-        skipped_todos = models.ToDoTask.objects.filter(
-            Q(notification_date=datetime.date.today()) & Q(completed_at__isnull=True)).count()
-        completed_habits = models.HabitDailyRecord.objects.filter(date_completed=datetime.date.today()).count()
-        skipped_habits = (models.Habit.objects.filter(is_done=False).count() - completed_habits +
-                          models.HabitDailyRecord.objects.filter(date_completed=datetime.date.today(),
-                                                                 habit__is_done=True).count())
+        completed_todos = models.Account.objects.get(user=self.request.user).get_completed_todos_count
+        skipped_todos = models.Account.objects.get(user=self.request.user).get_skipped_todos_count
+        completed_habits = models.Account.objects.get(user=self.request.user).get_completed_habits_count
+        skipped_habits = models.Account.objects.get(user=self.request.user).get_skipped_habits_count
         kwargs["score"] = 9.45
         kwargs["skipped_todos"] = skipped_todos
         kwargs["completed_todos"] = completed_todos
