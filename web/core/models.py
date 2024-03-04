@@ -137,3 +137,18 @@ class SpaceLearningFile(models.Model):
         SpaceLearningTask, on_delete=models.CASCADE, related_name="files"
     )
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Event(models.Model):
+    EVENT_TYPE = [
+        (0, "Concert/Cinema/Theater"),
+        (1, "Work or School"),
+        (2, "Planned meeting with friends, co-workers"),
+        (3, "Quality time in relationship"),
+        (4, "Unplanned meeting after work/school")
+    ]
+
+    user = models.ForeignKey(
+        get_user_model(), on_delete=models.CASCADE, related_name="events"
+    )
+    type = models.IntegerField(choices=EVENT_TYPE, default=4)
