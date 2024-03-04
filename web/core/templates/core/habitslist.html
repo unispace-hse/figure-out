@@ -10,7 +10,7 @@
         {% if habits_list|length == 0 %} <hr><h4>There are no habits. Add new habit to continue.</h4></hr> {% else %}
         <hr>
         <h2>Habits need to be completed today</h2>
-        </hr>
+
         {% for habit in habits_list %}
             {% csrf_token %}
             {% if not habit.is_completed_today and not habit.is_done %}
@@ -85,5 +85,4 @@
         {% endfor %}
     </ul>
 {% endif %}
-</hr>
 {% endblock %}

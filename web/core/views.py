@@ -13,7 +13,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.http import Http404, HttpResponse
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q
+from django.db.models import Q, Exists, OuterRef
 from . import forms
 from . import models
 
@@ -284,11 +284,15 @@ class EventCreateView(CreateView):
         completed_todos = models.ToDoTask.objects.filter(completed_at=datetime.date.today()).count()
         skipped_todos = models.ToDoTask.objects.filter(
             Q(notification_date=datetime.date.today()) & Q(completed_at__isnull=True)).count()
+        completed_habits = models.HabitDailyRecord.objects.filter(date_completed=datetime.date.today()).count()
+        skipped_habits = (models.Habit.objects.filter(is_done=False).count() - completed_habits +
+                          models.HabitDailyRecord.objects.filter(date_completed=datetime.date.today(),
+                                                                 habit__is_done=True).count())
         kwargs["score"] = 9.45
         kwargs["skipped_todos"] = skipped_todos
         kwargs["completed_todos"] = completed_todos
-        kwargs["skipped_habits"] = 3
-        kwargs["completed_habits"] = 4
+        kwargs["skipped_habits"] = skipped_habits
+        kwargs["completed_habits"] = completed_habits
         kwargs["skipped_sl"] = 5
         kwargs["completed_sl"] = 6
         kwargs["events"] = models.Event.objects.filter(created_at=datetime.date.today())
