@@ -4,7 +4,6 @@ from django.db import models
 from django.apps import apps
 from . import habits_html_calendar
 from .mlcontrol import Compute
-from core.models import Account
 
 
 class Habit(models.Model):
@@ -75,6 +74,6 @@ class HabitDailyRecord(models.Model):
     """Model representing daily records of completed habits."""
 
     habit = models.ForeignKey(
-        Habit, on_delete=models.CASCADE, related_name="habit_dailyrecords"
+        Habit, on_delete=models.CASCADE, related_name="dailyrecords", related_query_name="dailyrecord"
     )
     date_completed = models.DateField(db_index=True, auto_now_add=True)
