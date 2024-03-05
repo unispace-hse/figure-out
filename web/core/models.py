@@ -7,7 +7,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.db.models import Q
-from habits.models import HabitDailyRecord, Habit
+import habits.models
 
 
 class Account(models.Model):
@@ -39,16 +39,16 @@ class Account(models.Model):
 
     @property
     def get_completed_habits_count(self):
-        return HabitDailyRecord.objects.filter(
+        return habits.models.HabitDailyRecord.objects.filter(
             habit__user=self.user, date_completed=datetime.date.today()
         ).count()
 
     @property
     def get_skipped_habits_count(self):
         return (
-            Habit.objects.filter(is_done=False, is_suggested=False).count()
+            habits.models.Habit.objects.filter(is_done=False, is_suggested=False).count()
             - self.get_completed_habits_count
-            + HabitDailyRecord.objects.filter(
+            + habits.models.HabitDailyRecord.objects.filter(
                 date_completed=datetime.date.today(), habit__is_done=True
             ).count()
         )
