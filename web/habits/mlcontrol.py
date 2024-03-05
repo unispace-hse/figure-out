@@ -26,12 +26,12 @@ class MLData:
     def get_habit(Q3, T1, age):
         age = 18  # TODO: Implement ages split
         pathHabits = (
-            "core/data/Q3_a_marked.json"
+            "habits/data/Q3_a_marked.json"
             if 12 <= age <= 24
-            else "core/data/Q3_b_marked.json"
+            else "habits/data/Q3_b_marked.json"
         )
         path_map = (
-            "core/data/Q3_a_map.json" if age >= 12 and age <= 24 else "core/data/Q3_b_map.json"
+            "habits/data/Q3_a_map.json" if age >= 12 and age <= 24 else "habits/data/Q3_b_map.json"
         )
         habits = json.load(open(pathHabits, "r"))
         path_map = json.load(open(path_map, "r"))

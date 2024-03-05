@@ -12,9 +12,6 @@ from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
 
-
-
-
 class RegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -49,23 +46,6 @@ class RegisterForm(UserCreationForm):
             user=user, gender=cd.get("gender"), birthday=cd.get("birthday")
         )
         account.save()
-
-
-
-
-
-class HabitForm(forms.ModelForm):
-    # def __init__(self, *args, **kwargs):
-    #     self.request = kwargs.pop("request")
-    #     super().__init__(*args, **kwargs)
-    #     self.helper = FormHelper(self)
-    #     self.helper.form_action = us.reverse_lazy('root')
-    #     self.helper.form_method = 'GET'
-    #     self.helper.add_input(Submit('submit', 'Create task'))
-
-    class Meta:
-        model = models.Habit
-        fields = ("title", "description", "goal")
 
 
 class EventForm(forms.ModelForm):
