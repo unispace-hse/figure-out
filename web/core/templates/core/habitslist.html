@@ -5,41 +5,58 @@
     <h1>Habits List</h1>
 
 <hr>
-    <ul class="list-group">
-        <a href="{% url 'habitcreate' %}" class="btn btn-info" type="button">Add new Habit</a>
-        {% if habits_list|length == 0 %} <hr><h4>There are no habits. Add new habit to continue.</h4></hr> {% else %}
-        <hr>
-        <h2>Habits need to be completed today</h2>
 
-        {% for habit in habits_list %}
-            {% csrf_token %}
-            {% if not habit.is_completed_today and not habit.is_done %}
-                <li class="list-group-item list-group-item-action">
-                    <div class="form-check" style="text-align: left">
-                        <form method="post" action="{% url "habitcheck" habit.id %}">
-                            {% csrf_token %}
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
+  <h2>Suggested habit</h2>
+  <ul class="list-group">
+  <li class="list-group-item list-group-item-action">
+    <div class="form-check" style="text-align: left">
+      <form method="post" action="{% url "habitupdate" suggested.id %}">
+        {% csrf_token %}
+        <div class="form-check">
+          <span class="badge badge-pill badge-primary">FigureOut Helper</span> {{ suggested.title }}
+          <button class="btn btn-primary" onclick="this.form.submit()" title="Details">Add suggested</button>
+        </div>
+
+      </form>
+    </div>
+  </li>
+  </ul>
+  <hr>
+
+  <h2>Habits need to be completed today</h2>
+  <ul class="list-group">
+    {% if habits_list|length == 0 %} <hr><h4>There are no habits. Add new habit to continue.</h4> {% else %}
+      <hr>
+
+      {% for habit in habits_list %}
+        {% csrf_token %}
+        {% if not habit.is_completed_today and not habit.is_done and not habit.is_suggested %}
+          <li class="list-group-item list-group-item-action">
+            <div class="form-check" style="text-align: left">
+              <form method="post" action="{% url "habitcheck" habit.id %}">
+                {% csrf_token %}
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault"
                                        title="mark as done for today"
                                        onchange="this.form.submit()"
                                        name="is_completed_today"
-                                       style="width:15px; height:25px;">
-                                <label class="form-check-label" for="flexCheckDefault">
-                                    {{ habit.title }}
-                                </label>
-                                <a class="btn btn-primary" href="{% url 'habitdetail' habit.id %}" role="button" title="Details">Details</a>
-                                <a class="btn btn-primary" href="{% url 'habitdelete' habit.id %}" role="button" title="delete">Delete</a>
-                            </div>
+                  style="width:15px; height:25px;">
+                  <label class="form-check-label" for="flexCheckDefault">
+                    {{ habit.title }}
+                  </label>
+                  <a class="btn btn-primary" href="{% url 'habitdetail' habit.id %}" role="button" title="Details">Details</a>
+                  <a class="btn btn-primary" href="{% url 'habitdelete' habit.id %}" role="button" title="delete">Delete</a>
+                </div>
 
-                        </form>
-                    </div>
-                </li>
-            {% endif %}
-        {% endfor %}
-    </ul>
+              </form>
+            </div>
+          </li>
+        {% endif %}
+      {% endfor %}
+      </ul>
 
-    <h2>Habits completed for today</h2>
-    <ul class="list-group">
+      <h2>Habits completed for today</h2>
+      <ul class="list-group">
         {% for habit in habits_list %}
             {% csrf_token %}
             {% if habit.is_completed_today %}
@@ -67,8 +84,8 @@
         {% endfor %}
     </ul>
 
-    <h2>Archive</h2>
-    <ul class="list-group">
+      <h2>Archive</h2>
+      <ul class="list-group">
         {% for habit in habits_list %}
             {% csrf_token %}
             {% if habit.is_done and not habit.is_completed_today %}
@@ -84,5 +101,7 @@
             {% endif %}
         {% endfor %}
     </ul>
-{% endif %}
+      <hr>
+      <a href="{% url 'habitcreate' %}" class="btn btn-info" type="button">Add new Habit</a>
+    {% endif %}
 {% endblock %}

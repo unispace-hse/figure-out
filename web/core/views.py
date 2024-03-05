@@ -166,6 +166,10 @@ class HabitsListView(LoginRequiredMixin, ListView):
     def get_queryset(self):
         return models.Habit.objects.filter(user=self.request.user)
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        kwargs["suggested"] = models.Habit.update_suggested_habit(self.request.user)
+        return super(HabitsListView, self).get_context_data(object_list=object_list, **kwargs)
+
 
 class HabitDetailView(LoginRequiredMixin, DetailView):
     model = models.Habit
@@ -219,7 +223,9 @@ def habit_update_view(request, pk):
     if request.method == "POST":
         form = forms.HabitForm(request.POST, instance=obj)
         if form.is_valid():
-            form.save()
+            habit = form.save(commit=False)
+            habit.is_suggested = False
+            habit.save()
             return redirect("habitslist")
     form = forms.HabitForm(instance=obj)
     return render(request, "core/habitcreate.html", {"form": form})

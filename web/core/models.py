@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.db.models import Q
 from . import habits_html_calendar
+from .mlcontrol import Compute
 
 
 class Account(models.Model):
@@ -46,6 +47,7 @@ class Account(models.Model):
             habit__user=self.user, date_completed=datetime.date.today()
         ).count()
 
+    @property
     def get_skipped_habits_count(self):
         return (
             Habit.objects.filter(is_done=False).count()
@@ -54,6 +56,10 @@ class Account(models.Model):
                 date_completed=datetime.date.today(), habit__is_done=True
             ).count()
         )
+
+    @property
+    def get_age(self):
+        return int((datetime.date.today() - self.birthday).days / 365)
 
 
 class ToDoTag(models.Model):
@@ -99,6 +105,7 @@ class Habit(models.Model):
     goal = models.IntegerField(default=0)
     is_done = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    is_suggested = models.BooleanField(default=False)
 
     @property
     def is_completed_today(self):
@@ -133,6 +140,22 @@ class Habit(models.Model):
     @property
     def get_remaining_days(self):
         return self.goal - HabitDailyRecord.objects.filter(habit=self).count()
+
+    @staticmethod
+    def get_save_suggested_habit(user):
+        acc = Account.objects.get(user=user)
+        title, typ, goal, idd = Compute.get_habit(acc.q3,
+                                                  [],
+                                                  age=acc.get_age)
+        return Habit.objects.create(user=user, title=title, goal=goal, is_suggested=True)
+
+    @staticmethod
+    def update_suggested_habit(user):
+        try:
+            Habit.objects.filter(user=user, is_suggested=True).first().delete()
+        except AttributeError:
+            pass
+        return Habit.get_save_suggested_habit(user)
 
 
 class HabitDailyRecord(models.Model):
