@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.db.models import Q
 from . import habits_html_calendar
-from .mlcontrol import Compute
+from .control import *
 
 
 class Account(models.Model):
@@ -144,10 +144,10 @@ class Habit(models.Model):
     @staticmethod
     def get_save_suggested_habit(user):
         acc = Account.objects.get(user=user)
-        title, typ, goal, idd = Compute.get_habit(acc.q3,
-                                                  [],
-                                                  age=acc.get_age)
-        return Habit.objects.create(user=user, title=title, goal=goal, is_suggested=True)
+        title, typ, goal, idd = get_habit(acc.q3, [], age=acc.get_age)
+        return Habit.objects.create(
+            user=user, title=title, goal=goal, is_suggested=True
+        )
 
     @staticmethod
     def update_suggested_habit(user):

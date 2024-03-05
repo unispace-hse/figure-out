@@ -168,7 +168,9 @@ class HabitsListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         kwargs["suggested"] = models.Habit.update_suggested_habit(self.request.user)
-        return super(HabitsListView, self).get_context_data(object_list=object_list, **kwargs)
+        return super(HabitsListView, self).get_context_data(
+            object_list=object_list, **kwargs
+        )
 
 
 class HabitDetailView(LoginRequiredMixin, DetailView):
