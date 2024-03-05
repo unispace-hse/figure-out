@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}ToDoTask Create{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h1>ToDoTask Create</h1>
+        {% csrf_token %}
+        {% crispy form form.helper %}
+{% endblock %}

@@ -67,69 +67,6 @@ def user_logout(request):
     return redirect("root")
 
 
-class ToDoTaskCreateView(LoginRequiredMixin, CreateView):
-    model = models.ToDoTask
-    form_class = forms.ToDoTaskForm
-    template_name = "core/todocreate.html"
-
-    success_url = reverse_lazy("todolist")
-
-    def get_form_kwargs(self):
-        kwargs = super(ToDoTaskCreateView, self).get_form_kwargs()
-        kwargs["request"] = self.request
-        return kwargs
-
-    def form_valid(self, form):
-        obj = form.save(commit=False)
-        obj.user = self.request.user
-        obj.save()
-        return redirect(self.success_url)
-
-
-class ToDoListView(LoginRequiredMixin, ListView):
-    template_name = "core/todolist.html"
-    context_object_name = "todo_list"
-
-    def get_queryset(self):
-        return models.ToDoTask.objects.filter(user=self.request.user).order_by(
-            "-notification_date"
-        )
-
-
-@login_required
-def todo_check(request, todo_id):
-    todo = get_object_or_404(models.ToDoTask, pk=todo_id)
-    if todo.user != request.user:
-        return Http404()
-    if todo.is_done:
-        todo.is_done = False
-        todo.completed_at = None
-    else:
-        todo.is_done = True
-        todo.completed_at = datetime.date.today()
-    todo.save()
-
-    return redirect("todolist")
-
-
-@login_required
-def todo_delete(request, todo_id):
-    todo = get_object_or_404(models.ToDoTask, pk=todo_id)
-    if todo.user != request.user:
-        return Http404()
-    todo.delete()
-    return redirect("todolist")
-
-
-class ToDoTaskDetailView(LoginRequiredMixin, DetailView):
-    model = models.ToDoTask
-    template_name = "core/tododetails.html"
-
-    def get_queryset(self):
-        if self.request.user.is_authenticated:
-            return models.ToDoTask.objects.filter(user=self.request.user)
-        else:
-            return models.ToDoTask.none()
 
 
 # class ToDoTaskUpdateView(LoginRequiredMixin, UpdateView):
@@ -145,18 +82,7 @@ class ToDoTaskDetailView(LoginRequiredMixin, DetailView):
 #         return kwargs
 
 
-@login_required
-def todo_task_update_view(request, pk):
-    obj = get_object_or_404(models.ToDoTask, id=pk)
-    if obj.user != request.user:
-        return Http404()
-    if request.method == "POST":
-        form = forms.ToDoTaskForm(request.POST, instance=obj, request=request)
-        if form.is_valid():
-            form.save()
-            return redirect("todolist")
-    form = forms.ToDoTaskForm(instance=obj, request=request)
-    return render(request, "core/todocreate.html", {"form": form})
+
 
 
 class HabitsListView(LoginRequiredMixin, ListView):
@@ -179,7 +105,7 @@ class HabitDetailView(LoginRequiredMixin, DetailView):
         if self.request.user.is_authenticated:
             return self.model.objects.filter(user=self.request.user)
         else:
-            return self.model.ToDoTask.none()
+            return self.model.none()
 
 
 def habit_check(request, pk):
