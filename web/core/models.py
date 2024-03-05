@@ -7,6 +7,7 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.db.models import Q
+from django.apps import apps
 
 
 class Account(models.Model):
@@ -18,7 +19,7 @@ class Account(models.Model):
     Q2 = [(i, i) for i in range(16)]
     Q3 = [(i, i) for i in range(20)]
 
-    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE)
+    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, related_name="account")
     birthday = models.DateField()
     gender = models.CharField(max_length=1, choices=GENDER, default="O")
     q1 = models.IntegerField(default=0, choices=Q1)
@@ -27,20 +28,18 @@ class Account(models.Model):
 
     @property
     def get_completed_todos_count(self):
-        return ToDoTask.objects.filter(
-            user=self.user, completed_at=datetime.date.today()
-        ).count()
+        return self.user.todotasks.filter(completed_at=datetime.date.today()).count()
 
     @property
     def get_skipped_todos_count(self):
-        return ToDoTask.objects.filter(
-            Q(user=self.user)
-            & Q(notification_date=datetime.date.today())
+        return self.user.todotasks.filter(
+            Q(notification_date=datetime.date.today())
             & Q(completed_at__isnull=True)
         ).count()
 
     @property
     def get_completed_habits_count(self):
+        self.user.habits
         return HabitDailyRecord.objects.filter(
             habit__user=self.user, date_completed=datetime.date.today()
         ).count()

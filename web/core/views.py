@@ -4,17 +4,13 @@ Core views
 
 import datetime
 
-from django.views.generic import ListView
-from django.views.generic.edit import CreateView, UpdateView
-from django.views.generic.detail import DetailView
-from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic.edit import CreateView
+from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.forms import AuthenticationForm
-from django.http import Http404, HttpResponse
+from django.http import Http404
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.db.models import Q, Exists, OuterRef
 from . import forms
 from . import models
 
@@ -66,20 +62,6 @@ def user_logout(request):
     logout(request)
     return redirect("root")
 
-
-
-
-# class ToDoTaskUpdateView(LoginRequiredMixin, UpdateView):
-#     model = models.ToDoTask
-#     template_name = "core/todocreate.html"
-#     form_class = forms.ToDoTaskForm
-#     # fields = ["title"]
-#     success_url = reverse_lazy("todolist")
-#
-#     def get_form_kwargs(self):
-#         kwargs = super(ToDoTaskUpdateView, self).get_form_kwargs()
-#         kwargs["request"] = self.request
-#         return kwargs
 
 @login_required
 def setup_priority_service(request):

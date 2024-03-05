@@ -1,9 +1,10 @@
 import datetime
 from django.contrib.auth import get_user_model
 from django.db import models
-from core.models import Account
+from django.apps import apps
 from . import habits_html_calendar
 from .mlcontrol import Compute
+from core.models import Account
 
 
 class Habit(models.Model):
@@ -55,7 +56,7 @@ class Habit(models.Model):
 
     @staticmethod
     def get_save_suggested_habit(user):
-        acc = Account.objects.get(user=user)
+        acc = user.account
         title, typ, goal, idd = Compute.get_habit(acc.q3,
                                                   [],
                                                   age=acc.get_age)
