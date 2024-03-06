@@ -1,12 +1,22 @@
+version: '3.8'
+
 services:
   db:
     image: postgres:14
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     ports:
-      - 5432:5432
+      - "5432:5432"
     environment:
       - "POSTGRES_HOST_AUTH_METHOD=trust"
+
+  ml_app:
+    build:
+      context: ../ml-back
+      dockerfile: ./docker/Dockerfile
+    command: python api.py
+    ports:
+      - "8282:8282"
 
   web:
     build:
@@ -16,8 +26,9 @@ services:
     volumes:
       - ../web:/code
     ports:
-      - 8000:8000
+      - "8000:8000"
     depends_on:
+      - ml_app
       - db
 
 volumes:
