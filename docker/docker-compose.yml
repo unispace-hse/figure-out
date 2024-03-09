@@ -5,31 +5,64 @@ services:
     image: postgres:14
     volumes:
       - postgres_data:/var/lib/postgresql/data/
-    ports:
-      - "5432:5432"
+    expose:
+      - "5432"
     environment:
-      - "POSTGRES_HOST_AUTH_METHOD=trust"
+#      - "POSTGRES_HOST_AUTH_METHOD=trust"
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    restart: always
 
   ml_app:
     build:
       context: ../ml-back
       dockerfile: ./docker/Dockerfile
     command: python api.py
-    ports:
-      - "8282:8282"
+    expose:
+      - "8282"
 
   web:
     build:
       context: ../web
       dockerfile: ./docker/Dockerfile
-    command: python manage.py runserver 0.0.0.0:8000
+    command: gunicorn --bind 0.0.0.0:8000 web.wsgi:application
     volumes:
       - ../web:/code
-    ports:
-      - "8000:8000"
+      - staticdata:/code/static
+    expose:
+      - "8000"
     depends_on:
       - ml_app
       - db
+    environment:
+      DATABASE_URL: "postgresql://postgres:postgres@db:5432/postgres"
+    restart: always
+
+  pgadmin:
+    image: dpage/pgadmin4
+    ports:
+      - "5050:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    volumes:
+      - staticdata:/var/lib/pgadmin
+    depends_on:
+      - db
+
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ../nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - staticdata:/usr/share/nginx/html/static
+    depends_on:
+      - web
+      - pgadmin
+    restart: always
 
 volumes:
   postgres_data:
+  staticdata:
