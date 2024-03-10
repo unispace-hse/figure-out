@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+{% block title %}Sign Up{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h1>Sign up</h1>
+        {% csrf_token %}
+        {% crispy form form.helper %}
+{% endblock %}

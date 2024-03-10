@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% block title %}Setting up{% endblock %}
+
+
+{% block content %}
+    <h2>Do not want to emphasise on the character, better to expand it</h2>
+    <form action="{% url 'character' %}" method="post">
+    {% csrf_token %}
+    <div id="checkboxgroup">
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="0" name="cbx0">
+            <label class="form-check-label" for="cbx0">Self-disciplined</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="1" name="cbx1">
+            <label class="form-check-label" for="cbx1">Purposeful</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="2" name="cbx2">
+            <label class="form-check-label" for="cbx2">Organized</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="3" name="cbx3">
+            <label class="form-check-label" for="cbx3">Responsible</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="4" name="cbx4">
+            <label class="form-check-label" for="cbx4">Adaptive</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="5" name="cbx5">
+            <label class="form-check-label" for="cbx5">Proactive</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="6" name="cbx6">
+            <label class="form-check-label" for="cbx6">Open-minded</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="7" name="cbx7">
+            <label class="form-check-label" for="cbx7">Diagnozed mental health disease</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="8" name="cbx8">
+            <label class="form-check-label" for="cbx8">had depression or panic attacks</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="9" name="cbx9">
+            <label class="form-check-label" for="cbx9">Always too stressed out</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="10" name="cbx10">
+            <label class="form-check-label" for="cbx10">Often overwhelmed</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="11" name="cbx11">
+            <label class="form-check-label" for="cbx11">Generally anxious</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="12" name="cbx12">
+            <label class="form-check-label" for="cbx12">Feel lonely</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="13" name="cbx13">
+            <label class="form-check-label" for="cbx13">Feel lonely</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="14" name="cbx14">
+            <label class="form-check-label" for="cbx14">Stubborn on the goal (good way)</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="checkbox" value="15" name="cbx15">
+            <label class="form-check-label" for="cbx15">Confident in self-power</label>
+        </div>
+    </div>
+    <button type="button" class="btn btn-success" onclick="this.form.submit()">Submit</button>
+    </form>
+    <script>
+    function onlyOneCheckBox() {
+        var checkboxgroup = document.getElementById('checkboxgroup').getElementsByTagName("input");
+
+        var limit = 4;
+
+        for (var i = 0; i < checkboxgroup.length; i++) {
+            checkboxgroup[i].onclick = function() {
+                var checkedcount = 0;
+                    for (var i = 0; i < checkboxgroup.length; i++) {
+                    checkedcount += (checkboxgroup[i].checked) ? 1 : 0;
+                }
+                if (checkedcount > limit) {
+                    console.log("You can select maximum of " + limit + " checkbox.");
+                    alert("You can select maximum of " + limit + " checkbox.");
+                    this.checked = false;
+                }
+            }
+        }
+    }
+    </script>
+
+    <script type="text/javascript">
+        onlyOneCheckBox()
+    </script>
+{% endblock %}
