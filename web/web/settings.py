@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     "core",
     "todos",
     "habits",
+    "api",
     "crispy_forms",
     "crispy_bootstrap4",
 ]

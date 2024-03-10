@@ -1,8 +1,7 @@
 import json
 import requests
-import math
 
-url = "http://localhost:8282"
+url = "http://ml_app:8282"
 
 
 def get_task(new_material, pages, time) -> float:
