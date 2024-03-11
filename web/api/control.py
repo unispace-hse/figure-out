@@ -1,6 +1,6 @@
 # prompt: static class computing
-from . import transmitter
 import math
+from . import transmitter
 
 
 def get_sl_data(new_material, pages, time, Q1, Q2, weights) -> tuple[float, float, int]:
@@ -33,8 +33,10 @@ def get_habit(Q3, T1, age=18) -> tuple[str, str, int, int]:
 
 
 def get_grade(
-    count_task, count_todos, count_habits, missed_events, events=[-1], reviewed=True
+    count_task, count_todos, count_habits, missed_events, events=None, reviewed=True
 ) -> float:
+    if events is None:
+        events = [-1]
     return transmitter.get_grade(
         count_task, count_todos, count_habits, missed_events, events, reviewed
     )

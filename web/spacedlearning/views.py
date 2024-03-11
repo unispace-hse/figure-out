@@ -44,7 +44,6 @@ class SpacedLearningCreateView(LoginRequiredMixin, CreateView):
         task_weight, rate, days_left = get_sl_data(
             obj.new_material, obj.pages_cnt, obj.minutes_per_day, acc.q1, acc.q2, 1
         )
-        # Здесь как раз подсчитываем количество дней в первый раз и добавляем в объект datetime.timedelta(days=2)
         obj.delta_days_const = days_left
         obj.rate, obj.weight = rate, task_weight
         obj.next_train_date = datetime.date.today() + datetime.timedelta(

@@ -2,14 +2,14 @@
 Application forms
 """
 
+from datetime import datetime
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
 from django import urls as us
 from django.contrib.auth import get_user_model
-from . import models
-from datetime import datetime
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
+from . import models
 
 
 class RegisterForm(UserCreationForm):

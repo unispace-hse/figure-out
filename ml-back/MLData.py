@@ -1,11 +1,14 @@
+"""Module to communicate with API Service"""
+
+import math
 from random import shuffle
 import json
-import tensorflow as tf
 import pickle
-import math
+import tensorflow as tf
 
 
 def get_task(new_material, pages, time) -> float:
+    """get_task"""
     with open("models/scalers/scaler_weight.pkl", "rb") as f:
         scaler = pickle.load(f)
         loaded_model = tf.keras.models.load_model("models/calculate_weight")
@@ -14,6 +17,7 @@ def get_task(new_material, pages, time) -> float:
 
 
 def get_score(Q1, Q2, weights) -> float:
+    """get_score"""
     s, d, p, u = 0, 0, 0, 0
     for i in Q2:
         if i <= 7:
@@ -32,6 +36,7 @@ def get_score(Q1, Q2, weights) -> float:
 
 
 def get_rate(task, score) -> float:
+    """get_rate"""
     with open("models/scalers/scaler_rate.pkl", "rb") as f:
         scaler = pickle.load(f)
         loaded_model = tf.keras.models.load_model("models/calculate_rate")
@@ -40,6 +45,7 @@ def get_rate(task, score) -> float:
 
 
 def get_next_interval(weight, weights, rate, daysLeft) -> int:
+    """get_next_interval"""
     if rate < 1.3:
         rate = 1.5
     if daysLeft == -1:
@@ -53,23 +59,24 @@ def get_next_interval(weight, weights, rate, daysLeft) -> int:
 
 
 def get_habit(Q3, T1, age):
-    age = 18  # TODO: Implement ages split
-    pathHabits = (
-        "data/Q3_a_marked.json" if age >= 12 and age <= 24 else "data/Q3_b_marked.json"
+    """get_habit"""
+    age = 18
+    path_habits = (
+        "data/Q3_a_marked.json" if 12 <= age <= 24 else "data/Q3_b_marked.json"
     )
-    pathMap = "data/Q3_a_map.json" if age >= 12 and age <= 24 else "data/Q3_b_map.json"
-    habits = json.load(open(pathHabits, "r"))
-    pathMap = json.load(open(pathMap, "r"))
+    path_map = "data/Q3_a_map.json" if 12 <= age <= 24 else "data/Q3_b_map.json"
+    habits = json.load(open(path_habits, "r"))
+    path_map = json.load(open(path_map, "r"))
     shuffle(Q3)
     for bad_habit in Q3:
-        for solution in pathMap[bad_habit - 1]["habits"]:
+        for solution in path_map[bad_habit - 1]["habits"]:
             if solution in T1:
                 continue
             name = habits[solution - 1]["name"]
             type = habits[solution - 1]["type"]
             value = habits[solution - 1]["value"]
-            return (name, type, value, solution)
-    if T1 != []:
+            return name, type, value, solution
+    if T1:
         return get_habit(Q3, [], age)
     else:
         return "Update an app. Cause there's a problem with habits suggestion"
@@ -79,8 +86,8 @@ def get_grade(count_task, count_todos, count_habits, missed_events, events, revi
     if events == [-1]:
         events = []
     reviewed = True  # Delete when text added
-    cntEvents = len(set(events))
-    # "tasks", "habits", "todos", "cntEvents", "missed", "reviewed", "grade"
+    cnt_events = len(set(events))
+    # "tasks", "habits", "todos", "cnt_events", "missed", "reviewed", "grade"
     with open("models/scalers/scaler_grade.pkl", "rb") as f:
         scaler = pickle.load(f)
         loaded_model = tf.keras.models.load_model("models/calculate_grade")
@@ -90,7 +97,7 @@ def get_grade(count_task, count_todos, count_habits, missed_events, events, revi
                     count_task,
                     count_habits,
                     count_todos,
-                    cntEvents,
+                    cnt_events,
                     missed_events,
                     reviewed,
                 ]
@@ -99,15 +106,15 @@ def get_grade(count_task, count_todos, count_habits, missed_events, events, revi
         grade = loaded_model.predict(input_features)[0][0]
         if missed_events == 0:
             grade = max(grade, 7)
-            if count_task + count_todos + count_habits + cntEvents > 9:
+            if count_task + count_todos + count_habits + cnt_events > 9:
                 grade = max(grade, 8.5)
         elif missed_events == 1:
             grade = min(grade, 6.5)
-            if count_task + count_todos + count_habits + cntEvents < 7:
+            if count_task + count_todos + count_habits + cnt_events < 7:
                 grade = 5
         elif missed_events == 2:
             grade = min(grade, 6)
-            if count_task + count_todos + count_habits + cntEvents < 8:
+            if count_task + count_todos + count_habits + cnt_events < 8:
                 grade = 5
         elif missed_events == 3:
             grade = min(grade, 5)

@@ -12,7 +12,7 @@ def get_task(new_material, pages, time) -> float:
 
 
 def get_score(Q1, Q2, weights) -> float:
-    if Q2 == []:
+    if not Q2:
         Q2 = [1]
     params = {"Q1": Q1, "Q2": Q2, "weights": weights}
     response = requests.get(url + "/get_score", params=params, timeout=10)
@@ -40,9 +40,9 @@ def get_next_interval(weight, weights, rate, daysLeft) -> int:
 
 
 def get_habit(Q3, T1, age):
-    if Q3 == []:
+    if not Q3:
         Q3 = [1]
-    if T1 == []:
+    if not T1:
         T1 = [-1]
     params = {"Q3": Q3, "T1": T1, "age": age}
     response = requests.get(url + "/get_habit", params=params, timeout=10)
@@ -56,9 +56,9 @@ def get_habit(Q3, T1, age):
 
 
 def get_grade(
-    count_task, count_todos, count_habits, missed_events, events=[-1], reviewed=True
+    count_task, count_todos, count_habits, missed_events, events=None, reviewed=True
 ):
-    if events == []:
+    if events is None or not events:
         events = [-1]
     params = {
         "count_task": count_task,

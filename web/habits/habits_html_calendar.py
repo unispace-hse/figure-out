@@ -1,6 +1,5 @@
-from django.utils.timezone import get_current_timezone
-from calendar import HTMLCalendar
 import datetime
+from calendar import HTMLCalendar
 
 
 class HabitsHTMLCalendar(HTMLCalendar):

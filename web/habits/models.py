@@ -1,9 +1,8 @@
 import datetime
+from api.control import get_habit
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.apps import apps
 from . import habits_html_calendar
-from api.control import get_habit
 
 
 class Habit(models.Model):
