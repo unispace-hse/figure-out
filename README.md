@@ -99,7 +99,7 @@ Figure Out - расширенный таск-менеджер. Он нужен, 
 *Например*: `(env) -> figure-out git:(main) $` 
 
 **Запускаем виртуальный сервер**
-`python web/manage.py runserver` - стандартный порт 8080 <br>
+`python web/manage.py runserver` - стандартный порт 8000 <br>
 
 ## Архитектура
 
