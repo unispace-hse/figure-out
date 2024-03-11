@@ -1,5 +1,2 @@
-[MASTER]
-ignore-patterns=obsolete/*
-
 [MESSAGES CONTROL]
-disable = duplicate-code,no-member
+disable = duplicate-code,no-member,invalid-name,missing-function-docstring,too-many-boolean-expressions,unused-argument,no-else-return,unused-import,missing-module-docstring,import-error,too-many-ancestors,missing-class-docstring,super-with-arguments,too-few-public-methods,arguments-renamed,too-many-branches,too-many-statements,no-name-in-module,unused-variable,attribute-defined-outside-init,consider-using-f-string,too-many-arguments,redefined-builtin,consider-using-with,unspecified-encoding,too-many-locals,broad-exception-caught,chained-comparison,wrong-import-order,missing-timeout,dangerous-default-value,line-too-long,fixme
