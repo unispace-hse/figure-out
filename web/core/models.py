@@ -8,6 +8,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.postgres.fields import ArrayField
 from django.db.models import Q
 import habits.models
+from api.control import get_grade
 
 
 class Account(models.Model):
@@ -19,7 +20,9 @@ class Account(models.Model):
     Q2 = [(i, i) for i in range(16)]
     Q3 = [(i, i) for i in range(20)]
 
-    user = models.OneToOneField(get_user_model(), on_delete=models.CASCADE, related_name="account")
+    user = models.OneToOneField(
+        get_user_model(), on_delete=models.CASCADE, related_name="account"
+    )
     birthday = models.DateField()
     gender = models.CharField(max_length=1, choices=GENDER, default="O")
     q1 = models.IntegerField(default=0, choices=Q1)
@@ -33,8 +36,7 @@ class Account(models.Model):
     @property
     def get_skipped_todos_count(self):
         return self.user.todotasks.filter(
-            Q(notification_date=datetime.date.today())
-            & Q(completed_at__isnull=True)
+            Q(notification_date=datetime.date.today()) & Q(completed_at__isnull=True)
         ).count()
 
     @property
@@ -46,49 +48,48 @@ class Account(models.Model):
     @property
     def get_skipped_habits_count(self):
         return (
-            habits.models.Habit.objects.filter(is_done=False, is_suggested=False).count()
+            habits.models.Habit.objects.filter(
+                user=self.user, is_done=False, is_suggested=False
+            ).count()
             - self.get_completed_habits_count
             + habits.models.HabitDailyRecord.objects.filter(
-                date_completed=datetime.date.today(), habit__is_done=True
+                date_completed=datetime.date.today(),
+                habit__is_done=True,
+                habit__user=self.user,
             ).count()
+        )
+
+    @property
+    def get_completed_sl_count(self):
+        return self.user.spacedlearningtasks.filter(
+            prev_train_date=datetime.date.today()
+        ).count()
+
+    @property
+    def get_skipped_sl_count(self):
+        return self.user.spacedlearningtasks.filter(
+            next_train_date=datetime.date.today(), is_finished=False
+        ).count()
+
+    @property
+    def get_grade(self):
+        return get_grade(
+            self.get_completed_sl_count,
+            self.get_completed_todos_count,
+            self.get_completed_habits_count,
+            self.get_skipped_sl_count
+            + self.get_skipped_todos_count
+            + self.get_skipped_habits_count,
+            list(
+                self.user.events.filter(created_at=datetime.date.today()).values_list(
+                    "type", flat=True
+                )
+            ),
         )
 
     @property
     def get_age(self):
         return int((datetime.date.today() - self.birthday).days / 365)
-
-
-class SpaceLearningTask(models.Model):
-    """Model representing a task for space learning."""
-
-    user = models.ForeignKey(
-        get_user_model(), on_delete=models.CASCADE, related_name="spacelearningtasks"
-    )
-    title = models.CharField(max_length=128)
-    subject = models.CharField(max_length=128)
-    is_done = models.BooleanField(default=False)
-    description = models.TextField(null=True, blank=True)
-
-
-class SpaceLearningDailyRecord(models.Model):
-    """Model representing daily records of space learning tasks."""
-
-    task = models.ForeignKey(
-        SpaceLearningTask,
-        on_delete=models.CASCADE,
-        related_name="spacelearningtask_dailyrecords",
-    )
-    notification_date = models.DateTimeField(db_index=True)
-    is_checked = models.BooleanField(default=False)
-
-
-class SpaceLearningFile(models.Model):
-    """Model representing files related to space learning tasks."""
-
-    task = models.ForeignKey(
-        SpaceLearningTask, on_delete=models.CASCADE, related_name="files"
-    )
-    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class Event(models.Model):

@@ -14,4 +14,3 @@ class HabitForm(forms.ModelForm):
     class Meta:
         model = models.Habit
         fields = ("title", "description", "goal")
-

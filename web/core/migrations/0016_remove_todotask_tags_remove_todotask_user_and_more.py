@@ -6,22 +6,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0015_rename_notification_datetime_todotask_notification_date_and_more'),
+        (
+            "core",
+            "0015_rename_notification_datetime_todotask_notification_date_and_more",
+        ),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='todotask',
-            name='tags',
+            model_name="todotask",
+            name="tags",
         ),
         migrations.RemoveField(
-            model_name='todotask',
-            name='user',
+            model_name="todotask",
+            name="user",
         ),
         migrations.DeleteModel(
-            name='ToDoTag',
+            name="ToDoTag",
         ),
         migrations.DeleteModel(
-            name='ToDoTask',
+            name="ToDoTask",
         ),
     ]

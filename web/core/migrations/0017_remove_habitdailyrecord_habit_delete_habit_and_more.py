@@ -6,18 +6,18 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('core', '0016_remove_todotask_tags_remove_todotask_user_and_more'),
+        ("core", "0016_remove_todotask_tags_remove_todotask_user_and_more"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='habitdailyrecord',
-            name='habit',
+            model_name="habitdailyrecord",
+            name="habit",
         ),
         migrations.DeleteModel(
-            name='Habit',
+            name="Habit",
         ),
         migrations.DeleteModel(
-            name='HabitDailyRecord',
+            name="HabitDailyRecord",
         ),
     ]

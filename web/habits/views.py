@@ -9,7 +9,7 @@ from . import forms
 
 
 class HabitsListView(LoginRequiredMixin, ListView):
-    template_name = "core/habitslist.html"
+    template_name = "habits/habitslist.html"
     context_object_name = "habits_list"
 
     def get_queryset(self):
@@ -17,12 +17,14 @@ class HabitsListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         kwargs["suggested"] = models.Habit.update_suggested_habit(self.request.user)
-        return super(HabitsListView, self).get_context_data(object_list=object_list, **kwargs)
+        return super(HabitsListView, self).get_context_data(
+            object_list=object_list, **kwargs
+        )
 
 
 class HabitDetailView(LoginRequiredMixin, DetailView):
     model = models.Habit
-    template_name = "core/habitdetails.html"
+    template_name = "habits/habitdetails.html"
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
@@ -53,7 +55,7 @@ def habit_delete(request, pk):
 class HabitCreateView(LoginRequiredMixin, CreateView):
     model = models.Habit
     form_class = forms.HabitForm
-    template_name = "core/habitcreate.html"
+    template_name = "habits/habitcreate.html"
 
     success_url = reverse_lazy("habitslist")
 
@@ -77,4 +79,4 @@ def habit_update_view(request, pk):
             habit.save()
             return redirect("habitslist")
     form = forms.HabitForm(instance=obj)
-    return render(request, "core/habitcreate.html", {"form": form})
+    return render(request, "habits/habitcreate.html", {"form": form})

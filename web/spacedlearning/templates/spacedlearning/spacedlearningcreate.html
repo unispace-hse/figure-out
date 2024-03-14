@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Spaced Learning Tasks Create{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <h1>Spaced Learning Task Create</h1>
+    <form method='post'>
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-success">Create Spaced Learning Task</button>
+    </form>
+{% endblock %}

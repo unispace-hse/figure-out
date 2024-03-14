@@ -3,9 +3,11 @@ from crispy_forms.layout import Submit
 from django import forms
 from . import models
 
+
 class TagMultipleChoiceField(forms.ModelMultipleChoiceField):
     def label_from_instance(self, tag: models.ToDoTag):
         return f"{tag.emoji}: {tag.title}"
+
 
 class ToDoTaskForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):

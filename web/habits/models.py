@@ -56,10 +56,10 @@ class Habit(models.Model):
     @staticmethod
     def get_save_suggested_habit(user):
         acc = user.account
-        title, typ, goal, idd = get_habit(acc.q3,
-                                                  [2],
-                                                  age=acc.get_age)
-        return Habit.objects.create(user=user, title=title, goal=goal, is_suggested=True)
+        title, typ, goal, idd = get_habit(acc.q3, [2], age=acc.get_age)
+        return Habit.objects.create(
+            user=user, title=title, goal=goal, is_suggested=True
+        )
 
     @staticmethod
     def update_suggested_habit(user):
@@ -74,6 +74,9 @@ class HabitDailyRecord(models.Model):
     """Model representing daily records of completed habits."""
 
     habit = models.ForeignKey(
-        Habit, on_delete=models.CASCADE, related_name="dailyrecords", related_query_name="dailyrecord"
+        Habit,
+        on_delete=models.CASCADE,
+        related_name="dailyrecords",
+        related_query_name="dailyrecord",
     )
     date_completed = models.DateField(db_index=True, auto_now_add=True)

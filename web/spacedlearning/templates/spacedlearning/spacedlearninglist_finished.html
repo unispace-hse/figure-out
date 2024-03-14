@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Spaced Learning{% endblock %}
+
+{% block content %}
+<h1>Spaced Learning Tasks list</h1>
+
+<ul class="nav nav-tabs">
+  <li class="nav-item">
+    <a class="nav-link" href={% url "spacedlearninglist_progress" %}>In progress</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link active" href={% url "spacedlearninglist_finished" %}>Finished</a>
+  </li>
+</ul>
+
+<hr>
+    <ul class="list-group">
+        <a href="{% url 'spacedlearningcreate' %}" class="btn btn-info" type="button">Start new Spaced Learning Task</a>
+        {% if sl_list|length == 0 %}<hr><h3>Nothing here. For now.</h3></hr>{% endif %}
+
+        {% for sl_task in sl_list %}
+            {% csrf_token %}
+                {% if sl_task.is_finished %}
+                <li class="list-group-item list-group-item-action">
+                    <div class="form-check">
+                            {% csrf_token %}
+                            <label class="form-check-label" for="flexcheckchecked">
+                                <h4><p><strong>{{ sl_task.title }}</strong></p></h4>
+                            </label>
+                            <a class="btn btn-primary" href="{% url 'spacedlearningdetail' sl_task.pk %}" role="button" title="details">Details</a>
+                            <a class="btn btn-primary" href="{% url 'spacedlearningdelete' sl_task.pk %}" role="button" title="delete">Delete</a>
+                            <h6>Subject: {{ sl_task.subject }}</h6>
+                            <h6>Was created: {{ sl_task.created_at }}</h6>
+                            <h6>Was finished: {{ sl_task.next_train_date }}</h6>
+
+                    </div>
+
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Done!</div>
+                    </div>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</hr>
+
+{% endblock %}

@@ -138,14 +138,23 @@ class EventCreateView(CreateView):
         skipped_habits = models.Account.objects.get(
             user=self.request.user
         ).get_skipped_habits_count
-        kwargs["score"] = 9.45
+        completed_sl = models.Account.objects.get(
+            user=self.request.user
+        ).get_completed_sl_count
+        skipped_sl = models.Account.objects.get(
+            user=self.request.user
+        ).get_skipped_sl_count
+        score = models.Account.objects.get(user=self.request.user).get_grade
+        kwargs["score"] = score
         kwargs["skipped_todos"] = skipped_todos
         kwargs["completed_todos"] = completed_todos
         kwargs["skipped_habits"] = skipped_habits
         kwargs["completed_habits"] = completed_habits
-        kwargs["skipped_sl"] = 5
-        kwargs["completed_sl"] = 6
-        kwargs["events"] = models.Event.objects.filter(created_at=datetime.date.today())
+        kwargs["skipped_sl"] = skipped_sl
+        kwargs["completed_sl"] = completed_sl
+        kwargs["events"] = models.Event.objects.filter(
+            user=self.request.user, created_at=datetime.date.today()
+        )
         return super(EventCreateView, self).get_context_data(**kwargs)
 
     def form_valid(self, form):
